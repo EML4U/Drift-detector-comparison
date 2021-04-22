@@ -4630,7 +4630,7 @@
          id="tspan7954"
          x="517.71326"
          y="33.079803"
-         style="stroke-width:0.75"></tspan></text>
+         style="stroke-width:0.75" /></text>
     <g
        id="g7952"
        transform="translate(-108.82188)">
@@ -4845,13 +4845,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.0006px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.250015"
-       x="-184.07878"
-       y="446.03442"
+       x="-184.0675"
+       y="445.77966"
        id="text8646"
        transform="rotate(-90)"><tspan
          id="tspan8644"
-         x="-184.07878"
-         y="446.03442"
+         x="-184.0675"
+         y="445.77966"
          style="stroke-width:0.250015">Percentage of total data</tspan></text>
   </g>
   <g
@@ -4877,18 +4877,18 @@
        x="400.30566"
        y="33.563179" />
     <rect
-       style="display:inline;fill:#ff9c00;fill-opacity:1;stroke:none;stroke-width:5.2709;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:37.7953;stroke-opacity:1;stop-color:#000000"
+       style="display:inline;fill:#ff9c00;fill-opacity:1;stroke:none;stroke-width:5.16353;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:37.7953;stroke-opacity:1;stop-color:#000000"
        id="rect8481-0"
-       width="6.703125"
+       width="6.4328132"
        height="2.6942682"
        x="7.734375"
        y="108.95304" />
     <rect
-       style="display:inline;fill:#ff9c00;fill-opacity:1;stroke:none;stroke-width:5.2709;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:37.7953;stroke-opacity:1;stop-color:#000000"
-       id="rect8672"
-       width="6.703125"
+       style="display:inline;fill:#ff9c00;fill-opacity:1;stroke:none;stroke-width:5.16353;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:37.7953;stroke-opacity:1;stop-color:#000000"
+       id="rect8481-0-3"
+       width="6.4328132"
        height="2.6942682"
        x="431.73318"
-       y="84.661743" />
+       y="89.312195" />
   </g>
 </svg>
