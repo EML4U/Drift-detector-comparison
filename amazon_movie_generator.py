@@ -26,7 +26,7 @@ ident = []
 with open('data/movies/movies.txt', 'r', errors='ignore') as f:
     for line in f:
         identifier = line.spl it(':')[0]
-        if 'review/helpfulness:' in identifier:
+        if 'review/helpfulness' in identifier:
             helpfulness = line.split(':')[1].strip()
             ident.append(helpfulness)
         elif 'review/score' in identifier:
