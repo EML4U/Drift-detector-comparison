@@ -2,7 +2,7 @@ import os
 import sys
 from embedding import BertHuggingface
 import pickle
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import random
 
@@ -35,7 +35,7 @@ for year in range(len(new)):
         random.shuffle(classes[i])
     
     for i in range(len(classes)):
-        new[year] = classes[i][:1000]
+        new[year] = classes[i][:500]
         
 #data = [list(t) for t in zip(*data)]
     
@@ -60,6 +60,7 @@ for year in range(len(new)):
     embs[0].extend(bert.embed([x + ' ' + random.choice(negative_words) for x in t]))
     embs[1].extend(k)
 
+embs, key = (list(t) for t in zip(*sorted(zip(embs[0], embs[1]), key=lambda x: x[1][-1])))
     
-with open('data/movies/embeddings/amazon_drift_ordered_by_time.pickle', 'wb') as handle:
-    pickle.dump(embs, handle)
+with open('data/movies/embeddings/amazon_small_drift.pickle', 'wb') as handle:
+    pickle.dump((embs, key), handle)

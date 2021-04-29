@@ -26,14 +26,15 @@ for year in range(len(new)):
         random.shuffle(classes[i])
     
     for i in range(len(classes)):
-        new[year] = classes[i][:1000]
+        new[year] = classes[i][:500]
         
 embs = [[],[]]
 for year in range(len(new)):
     t, k = [list(t) for t in zip(*new[year])]
     embs[0].extend(bert.embed(t))
     embs[1].extend(k)
-
+    
+embs, key = (list(t) for t in zip(*sorted(zip(embs[0], embs[1]), key=lambda x: x[1][-1])))
     
 with open('data/movies/embeddings/amazon_small.pickle', 'wb') as handle:
-    pickle.dump(embs, handle)
+    pickle.dump((embs, key), handle)
