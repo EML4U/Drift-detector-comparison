@@ -24,9 +24,9 @@ for i in range(len(keys)):
     keys[i][1] -= 1   # fix class names from 1..5 to 0..4 for easier 1-hot encoding
     
     
-new = 16*[[]]
+new = [[] for x in range(16)]
 for year in range(len(new)):
-    classes = 5*[[]]
+    classes = [[] for x in range(5)]
     data = [x for x in list(zip(texts, keys)) if keys[0][-1] + timedelta(days=365*year) < x[1][-1] < keys[0][-1] + timedelta(days=365*(year+1))] # gather amazon reviews of the third year only
     
     for point in data:
@@ -35,7 +35,7 @@ for year in range(len(new)):
         random.shuffle(classes[i])
     
     for i in range(len(classes)):
-        new[year] = classes[i][:500]
+        new[year].extend(classes[i][:200])
         
 #data = [list(t) for t in zip(*data)]
     
