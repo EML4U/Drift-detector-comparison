@@ -1,7 +1,7 @@
 from fcit import fcit
 from .DriftDetector import DriftDetector
 import numpy as np
-import sklearn
+from sklearn.metrics.pairwise import cosine_similarity
 
 def normalized(a, axis=-1, order=2):
     l2 = np.atleast_1d(np.linalg.norm(a, order, axis))
@@ -9,14 +9,16 @@ def normalized(a, axis=-1, order=2):
     return a / np.expand_dims(l2, axis)
 
 class CosineSimilarityDriftDetector(DriftDetector):
+    
     def __init__(self,
+                 boundary = 0.95,
                  ):
         super().__init__(classifier=None)
-        self.boundary = 0.95
+        self.boundary = boundary
         self.original_mean = None
         
     def fit(self, data, targets) -> DriftDetector:
-        raise Exception('do not need targets')
+        return self.fit(data)
     
     def fit(self, data) -> DriftDetector:
         self.original_mean = normalized(sum(data))
@@ -30,5 +32,5 @@ class CosineSimilarityDriftDetector(DriftDetector):
     def predict_proba(self, data) -> float:
         new_normalized = [normalized(x) for x in data]
         new_mean = normalized(sum(new_normalized))
-        cosine = sklearn.metrics.pairwise.cosine_similarity(self.original_mean, new_mean)
+        cosine = cosine_similarity(self.original_mean, new_mean)
         return cosine[0][0]
