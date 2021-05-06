@@ -1,12 +1,20 @@
-class DriftDetector():
+from sklearn.base import BaseEstimator
+
+class DriftDetector(BaseEstimator):
 
     def __init__(self,
-                 original_data,
-                 original_labels, 
                  classifier):
-        self.original_data = original_data
-        self.original_labels = original_labels
         self.classifier = classifier
+        
+    def fit(self, data, targets):
+        return self
     
-    def detect_drift(self, new_data) -> bool:
-        raise Exception('Not implemented!')
+    def fit(self, data):
+        return self
+    
+    def predict(self, data) -> bool:
+        pass
+    
+    def predict_proba(self, data) -> float:
+        pass
+    
