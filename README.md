@@ -1,15 +1,15 @@
-# Drift-detector-comparison
+# EML4U Drift Detector Comparison
 
-Comparing Drift Detectors
 
 ## Dataset
 
 ### Amazon movie reviews
 
-Download the ordered by time embeddings from [here](https://drive.google.com/drive/folders/1CRwXsKj8984PF0Cg7wpVu7Ib8S0SATof).  
+Download the ordered by time embeddings from [Semalytix Google Drive](https://drive.google.com/drive/folders/1CRwXsKj8984PF0Cg7wpVu7Ib8S0SATof).  
 Otherwise generate it yourself with the amazon_movie_generator.py (Might take around 2 days on a Quadro GPU).
 
 ![](figures/amazon-overview/amazon-overview.svg)
+
 
 ## Files
 
@@ -53,6 +53,7 @@ Otherwise generate it yourself with the amazon_movie_generator.py (Might take ar
 
 ### Drift experiments
 
+- 'Drift experiments Alibi Kolmogorov-Smirnov.ipynb'
 - 'Drift experiments Cosine.ipynb'
 - 'Drift experiments FCIT.ipynb'
 - 'Drift experiments KernelTwosample.ipynb'
