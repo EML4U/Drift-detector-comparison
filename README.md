@@ -1,11 +1,29 @@
 # EML4U Drift Detector Comparison
 
 
-## Dataset
+## Installation notes
 
-### Amazon movie reviews
+### Alibi Detect
 
-Download the ordered by time embeddings from [Semalytix Google Drive](https://drive.google.com/drive/folders/1CRwXsKj8984PF0Cg7wpVu7Ib8S0SATof).  
+```python
+# Erros with tensorflow 2.4.1 and 2.3.0
+pip3 uninstall tensorflow
+pip3 install -U tensorflow==2.4.0
+
+pip3 install alibi-detect
+pip3 install nlp
+```
+
+### Activate an environment (example)
+
+```python
+conda info --envs
+conda activate EML4U
+```
+
+## Dataset: Amazon movie reviews
+
+Download the ordered by time embeddings from [Semalytix Google Drive](https://drive.google.com/drive/folders/1CRwXsKj8984PF0Cg7wpVu7Ib8S0SATof).
 Otherwise generate it yourself with the amazon_movie_generator.py (Might take around 2 days on a Quadro GPU).
 
 ![](figures/amazon-overview/amazon-overview.svg)
