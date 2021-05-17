@@ -18,7 +18,7 @@ import os.path
 
 # Data storage configuration
 # Directory containing movies.txt.gz
-data_directory = "/home/adi/DICE/Data/EML4U/amazon-reviews/"
+data_directory = "../../../DATA/EML4U/amazon-reviews/"
 dataset_url = "https://snap.stanford.edu/data/movies.txt.gz"
 
 
