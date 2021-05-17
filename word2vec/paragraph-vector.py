@@ -33,6 +33,7 @@ doc2vec_vector_size = 50  # Dimensionality of the feature vectors
 doc2vec_min_count   = 2   # Ignores all words with total frequency lower than this
 doc2vec_epochs      = 10  # Number of iterations (epochs) over the corpus. Defaults to 10 for Doc2Vec
 
+model_file = data_directory + "amazonreviews_paragraphvector_docs"+str(max_docs)+"_year"+str(max_year)+"_dim"+str(doc2vec_vector_size)+"_count"+str(doc2vec_min_count)+"_epochs"+str(doc2vec_epochs)+"_.model"
 
 # Do not overwrite
 if os.path.isfile(model_file):
@@ -96,6 +97,7 @@ class Corpus:
 
 
 time_begin = time.time()
+print(datetime.fromtimestamp(time_begin))
 corpus = Corpus(max_docs, max_year)
 
 # https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec
