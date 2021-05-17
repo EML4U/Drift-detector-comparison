@@ -3,6 +3,10 @@
 # Le and Mikolov: Distributed Representations of Sentences and Documents
 # https://cs.stanford.edu/~quocle/paragraph_vector.pdf
 #
+# Installation note:
+# Make sure you have a C compiler before installing Gensim, to use the optimized doc2vec routines.
+# https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec
+#
 # Uses:
 # - https://snap.stanford.edu/data/web-Movies.html
 # - https://radimrehurek.com/gensim/
@@ -21,19 +25,17 @@ import gensim
 # Directory containing movies.txt.gz
 data_directory = "../../../DATA/EML4U/amazon-reviews/"
 dataset_url = "https://snap.stanford.edu/data/movies.txt.gz"
-model_file = data_directory + "paragraph_vector.model"
+model_file = data_directory + "amazonreviews.model"
 
 
 # Progessing configuration
-max_docs    = 10     # -1 to process all
+max_docs    = -1     # -1 to process all
 max_year    = 2000   # Max year for training
 print_texts = False  # Prints iterated texts (for development)
 
 doc2vec_vector_size = 50  # Dimensionality of the feature vectors
 doc2vec_min_count   = 2   # Ignores all words with total frequency lower than this
 doc2vec_epochs      = 10  # Number of iterations (epochs) over the corpus. Defaults to 10 for Doc2Vec
-
-model_file = data_directory + "amazonreviews_paragraphvector_docs"+str(max_docs)+"_year"+str(max_year)+"_dim"+str(doc2vec_vector_size)+"_count"+str(doc2vec_min_count)+"_epochs"+str(doc2vec_epochs)+"_.model"
 
 # Do not overwrite
 if os.path.isfile(model_file):
