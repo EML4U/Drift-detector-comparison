@@ -1,9 +1,11 @@
 # Example on how to use the model
+# Please compute vectors only once, cache and reuse them,
+# as models may not generate reproducible results.
 
 import gensim
 from gensim.models.doc2vec import Doc2Vec
 
-model = Doc2Vec.load("../../../DATA/EML4U/amazon-reviews/amazonreviews_test.model")
+model = Doc2Vec.load("../../../DATA/EML4U/amazon-reviews/amazonreviews.model")
 
 doc = "great blue product";
 

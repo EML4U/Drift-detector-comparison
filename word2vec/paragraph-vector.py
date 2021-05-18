@@ -24,18 +24,20 @@ import gensim
 # Data storage configuration
 # Directory containing movies.txt.gz
 data_directory = "../../../DATA/EML4U/amazon-reviews/"
-dataset_url = "https://snap.stanford.edu/data/movies.txt.gz"
 model_file = data_directory + "amazonreviews.model"
+dataset_url = "https://snap.stanford.edu/data/movies.txt.gz"
 
 
 # Progessing configuration
-max_docs    = -1     # -1 to process all
 max_year    = 2000   # Max year for training
+max_docs    = -1     # -1 to process all (for development)
 print_texts = False  # Prints iterated texts (for development)
 
 doc2vec_vector_size = 50  # Dimensionality of the feature vectors
 doc2vec_min_count   = 2   # Ignores all words with total frequency lower than this
-doc2vec_epochs      = 10  # Number of iterations (epochs) over the corpus. Defaults to 10 for Doc2Vec
+doc2vec_epochs      = 40  # Number of iterations (epochs) over the corpus. Defaults to 10 for Doc2Vec
+doc2vec_seed        = -1  # -1, or int for reproducible results (dev)
+
 
 # Do not overwrite
 if os.path.isfile(model_file):
@@ -103,7 +105,12 @@ print(datetime.fromtimestamp(time_begin))
 corpus = Corpus(max_docs, max_year)
 
 # https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec
-model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs)
+if(doc2vec_seed == -1):
+    model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=1)
+else:
+    # Note: Even setting PYTHONHASHSEED to 0 did not result in reproducible values
+    print("PYTHONHASHSEED (should be 0)", os.environ.get("PYTHONHASHSEED"))
+    model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=1, seed=doc2vec_seed, workers=1)
 
 # https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec.build_vocab
 print("Building vocabulary")
