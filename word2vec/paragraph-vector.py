@@ -24,8 +24,8 @@ import gensim
 # Data storage configuration
 # Directory containing movies.txt.gz
 data_directory = "../../../DATA/EML4U/amazon-reviews/"
-model_file = data_directory + "amazonreviews.model"
-dataset_url = "https://snap.stanford.edu/data/movies.txt.gz"
+model_file     = data_directory + "amazonreviews.model"
+dataset_url    = "https://snap.stanford.edu/data/movies.txt.gz"
 
 
 # Progessing configuration
@@ -35,8 +35,9 @@ print_texts = False  # Prints iterated texts (for development)
 
 doc2vec_vector_size = 50  # Dimensionality of the feature vectors
 doc2vec_min_count   = 2   # Ignores all words with total frequency lower than this
-doc2vec_epochs      = 40  # Number of iterations (epochs) over the corpus. Defaults to 10 for Doc2Vec
-doc2vec_seed        = -1  # -1, or int for reproducible results (dev)
+doc2vec_epochs      = 10  # Number of iterations (epochs) over the corpus. Defaults to 10 for Doc2Vec
+doc2vec_dm          = 1   # Training algorithm, distributed memory (PV-DM) or distributed bag of words (PV-DBOW)
+doc2vec_seed        = -1  # -1, or int for reproducible results (under development)
 
 
 # Do not overwrite
@@ -61,9 +62,10 @@ subprocess.run(["wget", "-c", "-nv", "-P", data_directory, dataset_url])
 # See: https://radimrehurek.com/gensim/auto_examples/core/run_corpora_and_vector_spaces.html#corpus-streaming-one-document-at-a-time
 class Corpus:
     
-    def __init__(self, max_docs=-1, max_year=2000, tokens_only=False):
+    def __init__(self, max_docs=-1, max_year=2000, print_texts=False, tokens_only=False):
         self.max_docs = max_docs
         self.max_year = max_year
+        self.print_texts = print_texts
         self.tokens_only = tokens_only
 
     def __iter__(self):
@@ -72,45 +74,50 @@ class Corpus:
             for line in f:
                 line_spilt = line.decode(encoding='iso-8859-1').split(':')
                 if "review/time" in line_spilt[0]:
-                    if(datetime.fromtimestamp(int(line_spilt[1])).year >= self.max_year):
-                        self.continue_loop = True
+                    if(datetime.fromtimestamp(int(line_spilt[1])).year > self.max_year):
+                        self.exclude = True
                     else:
-                        self.continue_loop = False
+                        self.exclude = False
                 if "review/summary" in line_spilt[0]:
                     text = line_spilt[1]
                 if "review/text" in line_spilt[0]:
-                    if(self.continue_loop):
+                    if(self.exclude):
                         continue
                     
-                    text += line_spilt[1]
+                    text += " " + line_spilt[1]
                     
                     i += 1
                     if(self.max_docs != -1 and i > self.max_docs):
                         break
-                    
-                    if(print_texts):
-                        print(str(i), "", text)
                         
                     tokens = gensim.utils.simple_preprocess(text)
+                    
+                    if(self.print_texts):
+                        print(str(i), "", text, tokens)
+                        
                     text = ""
                     
                     if self.tokens_only:
                         yield tokens
                     else:
+                        # https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.TaggedDocument
+                        # Tags may be one or more unicode string tokens, but typical practice
+                        # (which will also be the most memory-efficient) is for the tags list
+                        # to include a unique integer id as the only tag.
                         yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
 
 
 time_begin = time.time()
 print(datetime.fromtimestamp(time_begin))
-corpus = Corpus(max_docs, max_year)
+corpus = Corpus(max_docs, max_year, print_texts)
 
 # https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec
 if(doc2vec_seed == -1):
-    model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=1)
+    model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=doc2vec_dm)
 else:
-    # Note: Even setting PYTHONHASHSEED to 0 did not result in reproducible values
-    print("PYTHONHASHSEED (should be 0)", os.environ.get("PYTHONHASHSEED"))
-    model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=1, seed=doc2vec_seed, workers=1)
+    # https://github.com/RaRe-Technologies/gensim/wiki/Recipes-&-FAQ Q11
+    print("PYTHONHASHSEED", os.environ.get("PYTHONHASHSEED"))
+    model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=doc2vec_dm, seed=doc2vec_seed, workers=1)
 
 # https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec.build_vocab
 print("Building vocabulary")
@@ -127,12 +134,10 @@ print("Saved model file", model_file)
 # Print info
 print(model)
 time_end = time.time()
-print("Runtime: %s seconds" % (time_end-time_begin))
+runtime = time_end - time_begin;
+print("Runtime: %s seconds" % (runtime))
 
 if(max_docs != -1):
-    print(max_docs, doc2vec_epochs, (time_end-time_begin)/max_docs, (time_end-time_begin)/max_docs*7911684/60/60)
-# docs  it  secs/doc  hours/corpus
-# 1000  10  0.0032     7.2236
-# 1000  40  0.0121    26.7820
-# 10000 10  0.0031     6.9914
-# 10000 40  0.0123    27.1997
+    print(max_docs, doc2vec_epochs, runtime/max_docs, runtime/max_docs*7911684/60/60, runtime/max_docs*418065/60/60)
+# docs  it  secs/doc  hours/corpus  hours/max2000
+# 1000  10  0.0078    17.1936       0.9085
