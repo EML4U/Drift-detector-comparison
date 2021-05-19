@@ -5,42 +5,35 @@
 import gensim
 from gensim.models.doc2vec import Doc2Vec
 
-model = Doc2Vec.load("../../../DATA/EML4U/amazon-reviews/amazonreviews.model")
+# https://hobbitdata.informatik.uni-leipzig.de/EML4U/2021-05-17-Amazon-Doc2Vec/
+model = Doc2Vec.load("../../../DATA/EML4U/amazon-reviews/amazonreviews_c.model")
 
-doc = "great blue product";
+# first entry
+review_summary = "There Is So Much Darkness Now ~ Come For The Miracle"
+review_text = "Synopsis: On the daily trek from Juarez, Mexico to El Paso, Texas an ever increasing number of female workers are found raped and murdered in the surrounding desert. Investigative reporter Karina Danes (Minnie Driver) arrives from Los Angeles to pursue the story and angers both the local police and the factory owners who employee the undocumented aliens with her pointed questions and relentless quest for the truth.<br /><br />Her story goes nationwide when a young girl named Mariela (Ana Claudia Talancon) survives a vicious attack and walks out of the desert crediting the Blessed Virgin for her rescue. Her story is further enhanced when the Wounds of Christ (stigmata) appear in her palms. She also claims to have received a message of hope for the Virgin Mary and soon a fanatical movement forms around her to fight against the evil that holds such a stranglehold on the area.<br /><br />Critique: Possessing a lifelong fascination with such esoteric matters as Catholic mysticism, miracles and the mysterious appearance of the stigmata, I was immediately attracted to the '05 DVD release `Virgin of Juarez'. The film offers a rather unique storyline blending current socio-political concerns, the constant flow of Mexican migrant workers back and forth across the U.S./Mexican border and the traditional Catholic beliefs of the Hispanic population. I must say I was quite surprised by the unexpected route taken by the plot and the means and methods by which the heavenly message unfolds.<br /><br />`Virgin of Juarez' is not a film that you would care to watch over and over again, but it was interesting enough to merit at least one viewing. Minnie Driver delivers a solid performance and Ana Claudia Talancon is perfect as the fragile and innocent visionary Mariela. Also starring Esai Morales and Angus Macfadyen (Braveheart)."
+doc = review_summary + " " + review_text
 
 tokens = gensim.utils.simple_preprocess(doc)
-vector = model.infer_vector(tokens)
-
-tokens2 = gensim.utils.simple_preprocess(doc)
-vector2 = model.infer_vector(tokens)
-
 print(tokens)
-print(tokens2)
+vector = model.infer_vector(tokens)
 print(vector)
-print(vector2)
 
-# Subsequent calls to this function may infer different representations for the same document.
-# For a more stable representation, increase the number of steps to assert a stricket convergence.
-# https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec.infer_vector
+tokens = gensim.utils.simple_preprocess(doc)
+print(tokens)
+vector = model.infer_vector(tokens)
+print(vector)
 
-# ['great', 'blue', 'product']
-# ['great', 'blue', 'product']
-# [-0.11509312  0.14762056 -0.03422474  0.0209586   0.04527559 -0.05443553
-#  -0.01632877  0.05278325  0.02247474 -0.11322651  0.01959775  0.10782573
-#   0.12373605 -0.121829    0.0274703  -0.02034174  0.09386072 -0.0250358
-#   0.16765213  0.0281806  -0.02333076  0.01330676 -0.0639389  -0.17567132
-#   0.04886921  0.02142672 -0.13612425  0.09088685 -0.06177525  0.01532993
-#   0.05467552  0.01723739 -0.06057579 -0.07369605 -0.07298804  0.10132957
-#  -0.118255   -0.16603085 -0.09985495 -0.1858428   0.05084351 -0.11533979
-#   0.03381306 -0.02403254 -0.00676765 -0.09889459 -0.04066175  0.08980722
-#   0.01113729  0.07410708]
-# [-0.12508309  0.09653892  0.00767757 -0.00713962  0.04812891 -0.0948585
-#  -0.03042169  0.0359451   0.01551943 -0.11089713  0.00889442  0.05958529
-#   0.13269109 -0.08582645  0.0087731  -0.03569825  0.11176272 -0.03730286
-#   0.13605452  0.01518989 -0.00719591  0.02909563 -0.02329572 -0.18949115
-#   0.02656603  0.01219813 -0.12950537  0.07610258 -0.00908099  0.02442977
-#   0.04653861  0.05990674 -0.09005374 -0.08324063 -0.02705938  0.08434743
-#  -0.11044835 -0.14968945 -0.0840792  -0.12976211  0.01213132 -0.09632532
-#   0.01482031 -0.02997352 -0.05999629 -0.12120721 -0.03231953  0.0825817
-#   0.04586223  0.0754095 ]
+# last entry
+review_summary = "The Earth is Hollow!"
+review_text = "Now for the first time, this film presents the history, mythology & folklore that the earth has a hollow realm, a mystical and physical place, thought to house prehistoric animals, or hide alien beings bent on conquering the earth. The hollow earth theory is represented in the history of many diverse cultures throughout the world. The Avalon of Camelot, the Garden of Eden, Paradise Lost, Shangri-La and Valhalla are names assigned to a mystical and physical place thought by some to house prehistoric animals and plants and by others to hide alien beings bent on conquering the outer Earth. This fascinating video is a compilation of extensive research by the International Society for a the Complete Earth.* DVD * 40 min<br /><br />Rent me: UFOdvd com/rent/"
+doc = review_summary + " " + review_text
+
+tokens = gensim.utils.simple_preprocess(doc)
+print(tokens)
+vector = model.infer_vector(tokens)
+print(vector)
+
+tokens = gensim.utils.simple_preprocess(doc)
+print(tokens)
+vector = model.infer_vector(tokens)
+print(vector)
