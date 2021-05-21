@@ -1,10 +1,16 @@
+# Iterator for reading summary and text fields from
+# https://snap.stanford.edu/data/movies.txt.gz
+# Returns values for modes: text, tokens, tagdoc
+
 import gzip
 from datetime import datetime
 import gensim
 
+# Stream corpus (memory efficient)
+# See: https://radimrehurek.com/gensim/auto_examples/core/run_corpora_and_vector_spaces.html#corpus-streaming-one-document-at-a-time
 class AmazonReviewsReader:
     
-    def __init__(self, file, mode, max_docs=-1, min_year=-1, max_year=-1, min_score=-1, max_score=-1, ):
+    def __init__(self, file, mode, max_docs=-1, min_year=-1, max_year=-1, min_score=-1, max_score=-1):
         self.file = file
         self.mode = mode
         self.max_docs = max_docs
