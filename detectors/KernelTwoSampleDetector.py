@@ -5,7 +5,7 @@ import numpy as np
 class KernelTwoSampleDriftDetector(DriftDetector):
     
     def __init__(self,
-                 boundary = 0.5,
+                 boundary = 0.05,
                  iterations = 500,
                  ):
         super().__init__(classifier=None)
