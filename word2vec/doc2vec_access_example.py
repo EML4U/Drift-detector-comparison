@@ -8,9 +8,19 @@ import yaml
 import gensim
 
 
+print("Gensim version:", gensim.__version__)
 config            = yaml.safe_load(open("../config.yaml", 'r'))
 amazon_gz_file    = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "movies.txt.gz")
-gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "amazonreviews_c.model")
+
+if(True):
+    # Model version d requires gensim 3.8.3
+    # Config it e.g. with:
+    # conda create -n gensim_3_8_3 gensim=3.8.3
+    # conda activate gensim_3_8_3
+    # conda install pyyaml
+    gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "amazonreviews_d.model")
+else:
+    gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "amazonreviews_c.model")
 
 max_docs = 2
 year = 2002
