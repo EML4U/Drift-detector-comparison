@@ -1,0 +1,9 @@
+# Locations of directories and files
+# Note: You can set a symlink using "ln -s /home/me/folder /mnt/eml4u-drift-data"
+
+# Directory containing https://snap.stanford.edu/data/movies.txt.gz
+AMAZON_MOVIE_REVIEWS_DIRECTORY: /mnt/eml4u-drift-data/amazon
+
+# Directory contain files gensim model files:
+# https://hobbitdata.informatik.uni-leipzig.de/EML4U/2021-05-17-Amazon-Doc2Vec/
+GENSIM_MODEL_DIRECTORY: /mnt/eml4u-drift-data/gensim
