@@ -3,6 +3,8 @@
 
 ## Installation notes
 
+Uses embedding/BertHuggingface from https://github.com/UBI-AGML-NLP/Embeddings
+
 ### Alibi Detect
 
 ```python

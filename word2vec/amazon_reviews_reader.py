@@ -64,7 +64,11 @@ class AmazonReviewsReader:
                     self.entry = {}
                     
                 # Get key/value
-                self.entry[line_spilt[0].split('/', 1)[1]] = line_spilt[1].strip()
+                try:
+                    self.entry[line_spilt[0].split('/', 1)[1]] = line_spilt[1].strip()
+                except IndexError:
+                    # Error in amazon movies file: profileName may be splitted into 2 lines (e.g. line 1274403)
+                    continue
 
                 # Filter by score
                 if self.min_score!=-1 and self.max_score!=-1 and line_spilt[0] == "review/score":
