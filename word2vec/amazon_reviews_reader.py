@@ -1,17 +1,45 @@
-# Iterator to read Amazon movie reviews
+# Downloader and iterator to read Amazon movie reviews
 # https://snap.stanford.edu/data/movies.txt.gz
 # https://snap.stanford.edu/data/web-Movies.html
 #
-# Modes: fields, text, tokens, tagdoc
+# Download example:
+# from amazon_reviews_reader import AmazonReviewsReader
+# AmazonReviewsReader.download("/tmp")
+#
+# Iterator
+# Modes:
+# fields, text (summary and text), tokens (words), tagdoc
+# Example:
+# from amazon_reviews_reader import AmazonReviewsReader
+# for item in AmazonReviewsReader("/tmp/movies.txt.gz", "fields", max_docs=3):
+#     print(item)
 
 from datetime import datetime
-import gzip
 import gensim
+import gzip
+import os
+import subprocess
 
 # Stream corpus (memory efficient)
 # See: https://radimrehurek.com/gensim/auto_examples/core/run_corpora_and_vector_spaces.html#corpus-streaming-one-document-at-a-time
 class AmazonReviewsReader:
-    
+
+    # Downloads file if not available
+    #
+    # https://snap.stanford.edu/data/web-Movies.html
+    # 3321791660 bytes / 3 GB
+    @staticmethod
+    def download(directory, url="https://snap.stanford.edu/data/movies.txt.gz"):
+        file_path = os.path.join(directory, url.rsplit('/', 1)[1])
+        if not os.path.isfile(file_path):
+            print("Download", url, directory)
+        # https://www.gnu.org/software/wget/manual/wget.html#Download-Options
+        # -c  --continue
+        # -nv --no-verbose
+        # -P  --directory-prefix=prefix
+        subprocess.run(["wget", "-c", "-nv", "-P", directory, url])
+
+
     def __init__(self, file, mode, max_docs=-1, min_year=-1, max_year=-1, min_score=-1, max_score=-1):
         self.file = file
         self.mode = mode

@@ -3,10 +3,14 @@
 from amazon_reviews_reader import AmazonReviewsReader
 from gensim.models.doc2vec import Doc2Vec
 import numpy as np
+import os.path
+import yaml
+import gensim
 
-data_directory = "../../../DATA/EML4U/amazon-reviews/"
-model_file     = data_directory + "amazonreviews_c.model"
-data_file      = data_directory + "movies.txt.gz"
+
+config            = yaml.safe_load(open("../config.yaml", 'r'))
+amazon_gz_file    = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "movies.txt.gz")
+gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "amazonreviews_c.model")
 
 max_docs = 2
 year = 2002
@@ -19,7 +23,7 @@ mode = "fields"
 
 # AmazonReviewsReader example
 if(False):
-    amazon_reviews_reader = AmazonReviewsReader(data_file, mode, max_docs=max_docs, min_year=year, max_year=year, min_score=score, max_score=score)
+    amazon_reviews_reader = AmazonReviewsReader(amazon_gz_file, mode, max_docs=max_docs, min_year=year, max_year=year, min_score=score, max_score=score)
     for item in amazon_reviews_reader:
         print(item)
         print("---")
@@ -27,8 +31,8 @@ if(False):
         
 # Model example
 if(True):
-    model = Doc2Vec.load(model_file)
-    amazon_reviews_reader = AmazonReviewsReader(data_file, "tokens", max_docs=max_docs, min_year=year, max_year=year, min_score=score, max_score=score)
+    model = Doc2Vec.load(gensim_model_file)
+    amazon_reviews_reader = AmazonReviewsReader(amazon_gz_file, "tokens", max_docs=max_docs, min_year=year, max_year=year, min_score=score, max_score=score)
     tokens = next(iter(amazon_reviews_reader))
     print(model.infer_vector(tokens))
 
@@ -36,7 +40,7 @@ if(True):
 # Variance example
 # amazonreviews_c.model: variance 0.12380553807645124, 98 docs
 if(False):
-    amazon_reader = AmazonReviewsReader(data_file, "tokens", max_docs=-1)
+    amazon_reader = AmazonReviewsReader(amazon_gz_file, "tokens", max_docs=-1)
     vecsum = 0
     veccount = 0
     i = 0

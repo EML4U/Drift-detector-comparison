@@ -12,23 +12,19 @@
 # - https://radimrehurek.com/gensim/
 # - https://radimrehurek.com/gensim/models/doc2vec.html
 
-
-import subprocess
-import gzip
-import os.path
-from datetime import datetime
-import time
-import gensim
 from amazon_reviews_reader import AmazonReviewsReader
+from datetime import datetime
+import gensim
+import os.path
+import time
+import yaml
 
 
 # Data storage configuration
-# Directory containing movies.txt.gz
-dataset_url        = "https://snap.stanford.edu/data/movies.txt.gz"
-data_directory     = "../../../DATA/EML4U/amazon-reviews/"
-file_amazonreviews = data_directory + "movies.txt.gz"
-model_file         = data_directory + "amazonreviews.model"
-
+config            = yaml.safe_load(open("../config.yaml", 'r'))
+amazon_directory  = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"])
+amazon_gz_file    = os.path.join(amazon_directory, "movies.txt.gz")
+gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "amazonreviews_dev.model")
 
 # Progessing configuration
 max_year    = 2000   # Max year for training
@@ -43,26 +39,17 @@ doc2vec_seed        = -1  # -1, or int for reproducible results (under developme
 
 
 # Do not overwrite
-if os.path.isfile(model_file):
-    print("Model file already exists, exiting.", model_file)
+if os.path.isfile(gensim_model_file):
+    print("Model file already exists, exiting.", gensim_model_file)
     exit()
 
 
 # Download file if not available
-#
-# https://snap.stanford.edu/data/web-Movies.html
-# 3321791660 bytes / 3 GB
-#
-# https://www.gnu.org/software/wget/manual/wget.html#Download-Options
-# -c  --continue
-# -nv --no-verbose
-# -P  --directory-prefix=prefix
-subprocess.run(["wget", "-c", "-nv", "-P", data_directory, dataset_url])
-
+AmazonReviewsReader.download(amazon_directory)
 
 time_begin = time.time()
 print(datetime.fromtimestamp(time_begin))
-corpus = AmazonReviewsReader(file_amazonreviews, "tagdoc", max_docs=max_docs, max_year=max_year)
+corpus = AmazonReviewsReader(amazon_gz_file, "tagdoc", max_docs=max_docs, max_year=max_year)
 
 # https://radimrehurek.com/gensim/models/doc2vec.html#gensim.models.doc2vec.Doc2Vec
 if(doc2vec_seed == -1):
@@ -81,14 +68,15 @@ print("Training model")
 model.train(corpus, total_examples=model.corpus_count, epochs=model.epochs)
 
 # Save model
-model.save(model_file)
-print("Saved model file", model_file)
+model.save(gensim_model_file)
+print("Saved model file", gensim_model_file)
 
 # Print info
 print(model)
 time_end = time.time()
 runtime = time_end - time_begin;
 print("Runtime: %s seconds" % (runtime))
+print("Gensim version:", gensim.__version__)
 
 if(max_docs != -1):
     print(max_docs, doc2vec_epochs, runtime/max_docs, runtime/max_docs*7911684/60/60, runtime/max_docs*418065/60/60)

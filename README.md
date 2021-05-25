@@ -31,11 +31,21 @@ Otherwise generate it yourself with the amazon_movie_generator.py (Might take ar
 
 ## Files
 
+### Configuration
+
+- config.yaml
+    - Locations of directories and files
+
+### Data access
+
+- word2vec/amazon_reviews_reader.py
+    - Downloads and reads https://snap.stanford.edu/data/web-Movies.html
+
 ### Data preparation
 
 - amazon_movie_generator.py
     - Reads source lines and generates pickle file.
-    - In: https://snap.stanford.edu/data/movies.txt.gz
+    - In: movies.txt
     - Out: data/movies/embeddings/{}.pickle
     - In 2: data/movies/embeddings/{}.pickle
     - Out 2: data/movies/embeddings/**amazon_ordered_by_time{}.pickle**
