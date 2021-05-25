@@ -1,34 +1,33 @@
+# Reads movies.txt.gz
+# Sorts data by date
+# Stores as pickle
+# - list of keys: helpfulness, score, time, number
+# - list of texts (concatenated fields summary and text)
+
 import os
-import sys
 import pickle
 from datetime import datetime
-import time
+import yaml
+from word2vec.amazon_reviews_reader import AmazonReviewsReader
 
+config          = yaml.safe_load(open("config.yaml", 'r'))
+amazon_gz_file  = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "movies.txt.gz")
+amazon_raw_file = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "amazon_raw.pickle")
 
 text_list = []
 key_list = []
 ident = []
 
-with open('data/movies/movies.txt', 'r', errors='ignore') as f:
-    for line in f:
-        identifier = line.split(':')[0]
-        if 'review/helpfulness' in identifier:
-            helpfulness = line.split(':')[1].strip()
-            ident.append(helpfulness)
-        elif 'review/score' in identifier:
-            score = line.split(':')[1].strip()
-            ident.append(int(float(score)))
-        elif 'review/time' in identifier:
-            time_i = line.split(':')[1].strip()
-            ident.append(datetime.fromtimestamp(int(time_i)))
-            key_list.append(ident)
-            ident = []
-        elif 'review/text' in identifier:
-            text = line.split(':')[1].strip().replace('<br />', ' ')
-            text_list.append(text)
+for item in AmazonReviewsReader(amazon_gz_file, "fields"):
+    ident.append(item['helpfulness'])
+    ident.append(int(float(item['score'])))
+    ident.append(datetime.fromtimestamp(int(item['time'])))
+    ident.append(item['number'])
+    key_list.append(ident)
+    ident = []
+    text_list.append((item['summary'] + " " + item['text']).replace('<br />', ' '))
 
+text_list, key_list = (list(t) for t in zip(*sorted(zip(text_list, key_list), key=lambda x: x[1][-2])))
 
-text_list, key_list = (list(t) for t in zip(*sorted(zip(text_list, key_list), key=lambda x: x[1][-1])))
-
-with open('data/movies/embeddings/amazon_raw.pickle', 'wb') as handle:
+with open(amazon_raw_file, 'wb') as handle:
     pickle.dump((text_list, key_list), handle)
