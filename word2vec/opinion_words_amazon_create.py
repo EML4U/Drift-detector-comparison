@@ -12,7 +12,7 @@ pickle_score_five = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-wo
 pickle_results = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words.pickle")
 csv_results    = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words.csv")
 
-if(True):
+if(False):
     # Use small test dataset
     pickle_score_one  = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words-score-one.pickle")
     pickle_score_five = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words-score-five.pickle")
