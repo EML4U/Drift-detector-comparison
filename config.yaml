@@ -8,3 +8,8 @@ AMAZON_MOVIE_REVIEWS_DIRECTORY: /mnt/eml4u-drift-data/amazon
 # Directory containing files gensim model files:
 # https://hobbitdata.informatik.uni-leipzig.de/EML4U/2021-05-17-Amazon-Doc2Vec/
 GENSIM_MODEL_DIRECTORY: /mnt/eml4u-drift-data/gensim
+
+# Directory containing positive and negative words
+# https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon
+# http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar
+OPINION_WORDS_DIRECTORY: /mnt/eml4u-drift-data/opinion-words

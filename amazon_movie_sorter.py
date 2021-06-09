@@ -22,6 +22,7 @@ ident = []
 
 timeBegin = time.time()
 print("Begin", time.asctime())
+print("Reading", amazon_gz_file)
 
 for item in AmazonReviewsReader(amazon_gz_file, "fields", max_docs=max_docs):
     ident.append(item['helpfulness'])
@@ -34,6 +35,7 @@ for item in AmazonReviewsReader(amazon_gz_file, "fields", max_docs=max_docs):
 
 text_list, key_list = (list(t) for t in zip(*sorted(zip(text_list, key_list), key=lambda x: x[1][-2])))
 
+print("Writing", amazon_raw_file)
 with open(amazon_raw_file, 'wb') as handle:
     pickle.dump((text_list, key_list), handle)
 
