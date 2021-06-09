@@ -42,8 +42,7 @@ data = []
 for key in all_keys:
     score_one_count  = negative_score_one.get(key, 0)
     score_five_count = negative_score_five.get(key, 0)
-    result = score_one_count - score_five_count
-    data.append((key, result, score_one_count, score_five_count))
+    data.append((key, score_one_count, score_five_count))
 
 # Sort by result / difference
 data = sorted(data, key=lambda tup: tup[1], reverse=True)
@@ -57,4 +56,5 @@ with open(csv_results ,'w') as out:
         csv_out.writerow(row)
 
 # Print
-print(data)
+if(False):
+    print(data)
