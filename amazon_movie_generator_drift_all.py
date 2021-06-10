@@ -16,6 +16,8 @@ num_samples = 500
 indices = []
 more_than_one = 0
 
+mode = "bert-768"
+
 ## First: Download the dataset
 #os.system('mkdir -p data/movies/embeddings')
 #os.system('wget -c https://snap.stanford.edu/data/movies.txt.gz')
@@ -26,7 +28,22 @@ more_than_one = 0
 
 ## Second: embed everything, save in chunks so the memory doesn't explode
 
-bert = BertHuggingface(8, batch_size=8)
+# Configure model by mode
+if(mode == "bert-768"):
+    bert = BertHuggingface(8, batch_size=8)
+    embed = bert.embed
+elif(mode == "bow-50"):
+    print("bow")
+    # TODO Required: funtion(text-list) -> list of embeddings
+    # https://github.com/UBI-AGML-NLP/Embeddings/blob/main/embedding/doc2vec.py 
+    # list to docs -> foreach
+    #bow = Doc2Vec.load(gensim_model_file)
+    #tokens = gensim.utils.simple_preprocess(___TEXT___)
+    #next(iter(amazon_reviews_reader))
+    #embed = bow.infer_vector(next.iter tokens)
+else:
+    print("error")
+    exit()
 
 with open('data/movies/embeddings/amazon_raw.pickle', 'rb') as handle:
     texts, keys = pickle.load(handle)
@@ -50,7 +67,8 @@ for i in range(len(classes)):
         
 
 # add words            
-negative_words = ['bad', 'horrible']
+#negative_words = ['bad', 'horrible']
+negative_words = ['waste', 'unwatchable', 'stinks', 'atrocious', 'yawn', 'ugh', 'abomination', 'garbage', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting', 'poorly']
 
 #with open('data/sentiment_words/negative-words.txt', 'r', errors='ignore') as f:
 #    for line in f:
@@ -86,15 +104,15 @@ def inject(texts, percent):
                      
 drifted_embeddings = []  
 drifted_texts, drifted_keys = [list(t) for t in zip(*drift_data)]
-drifted_embeddings.append(bert.embed(drifted_texts))
+drifted_embeddings.append(embed(drifted_texts))
 
 for num, perc in enumerate(target_percentages):
     drifted_texts = inject(drifted_texts, perc)
-    drifted_embeddings.append(bert.embed(drifted_texts))
+    drifted_embeddings.append(embed(drifted_texts))
 
     
 original_texts, original_keys = [list(t) for t in zip(*original_data)]
-original_embs = bert.embed(original_texts)
+original_embs = embed(original_texts)
 
 dump_data = {'orig': (original_embs, original_keys), 'drifted': (drifted_embeddings, drifted_keys)}
     
