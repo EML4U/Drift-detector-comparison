@@ -1,6 +1,5 @@
 import os
 import sys
-from embedding import BertHuggingface
 import pickle
 from datetime import datetime, timedelta
 import time
@@ -9,37 +8,31 @@ random.seed(42)
 import re
 import yaml
 
-# "bert_768" or "bow_50"
 mode = "bert_768"
-
-config          = yaml.safe_load(open("config.yaml", 'r'))
-amazon_raw_file = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "amazon_raw.pickle")
-embeddings_file = os.path.join(config["EMBEDDINGS_DIRECTORY"], "amazon_drift_" + mode + ".pickle")
-
-# target percentages
-target_percentages = [0.005, 0.01, 0.02, 0.04, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2.0, 4.0, 10.0, 20.0, 50.0, 100.0]
+#mode = "bow_50"
 num_samples = 500
 
-# variables used later
-indices = []
-more_than_one = 0
+target_percentages = [0.005, 0.01, 0.02, 0.04, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2.0, 4.0, 10.0, 20.0, 50.0, 100.0]
+negative_words = ['waste', 'unwatchable', 'stinks', 'atrocious', 'yawn', 'ugh', 'abomination', 'garbage', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting', 'poorly']
+
+config            = yaml.safe_load(open("config.yaml", 'r'))
+amazon_raw_file   = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "amazon_raw.pickle")
+gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "amazonreviews.model") # amazonreviews_d.model
+embeddings_file   = os.path.join(config["EMBEDDINGS_DIRECTORY"], "amazon_drift_" + mode + ".pickle")
 
 
 ## Embed everything, save in chunks so the memory doesn't explode
 
 # Configure model to use by mode
 if(mode == "bert_768"):
+    from embedding import BertHuggingface
     bert = BertHuggingface(8, batch_size=8)
     embed = bert.embed
 elif(mode == "bow_50"):
-    print("bow")
-    # TODO Required: funtion(text-list) -> list of embeddings
-    # https://github.com/UBI-AGML-NLP/Embeddings/blob/main/embedding/doc2vec.py 
-    # list to docs -> foreach
-    #bow = Doc2Vec.load(gensim_model_file)
-    #tokens = gensim.utils.simple_preprocess(___TEXT___)
-    #next(iter(amazon_reviews_reader))
-    #embed = bow.infer_vector(next.iter tokens)
+    from word2vec.Word2Vec import Word2Vec
+    word2vec = Word2Vec(gensim_model_file)
+    word2vec.prepare()
+    embed = word2vec.embed
 else:
     raise ValueError("Unknown mode " + mode)
 
@@ -61,10 +54,9 @@ drift_data = []
 for i in range(len(classes)):
     original_data.extend(classes[i][:num_samples])
     drift_data.extend(classes[i][num_samples:2*num_samples])
-       
-# Inject words            
-negative_words = ['waste', 'unwatchable', 'stinks', 'atrocious', 'yawn', 'ugh', 'abomination', 'garbage', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting', 'poorly']
 
+indices = []
+more_than_one = 0
 def inject(texts, percent):
     """ texts will be injected so that they then are at a injection rate of #percent
     """
