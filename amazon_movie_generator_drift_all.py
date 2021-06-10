@@ -22,7 +22,13 @@ gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "amazonreview
 embeddings_file   = os.path.join(config["EMBEDDINGS_DIRECTORY"], "amazon_drift_" + mode + ".pickle")
 
 target_percentages = [0.005, 0.01, 0.02, 0.04, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2.0, 4.0, 10.0, 20.0, 50.0, 100.0]
-negative_words = ['waste', 'unwatchable', 'stinks', 'atrocious', 'yawn', 'ugh', 'abomination', 'garbage', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting', 'poorly']
+
+# ratio at least 1.5
+#negative_words = ['waste', 'unwatchable', 'stinks', 'atrocious', 'yawn', 'ugh', 'abomination', 'stupidest', 'garbage', 'laughably', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting', 'poorly', 'disgrace', 'lame', 'insulting', 'lousy', 'disapointment', 'pointless', 'horrible', 'insult', 'laughable', 'terrible', 'moronic', 'sucks', 'idiotic', 'boycott', 'froze', 'nauseating', 'worthless', 'shoddy']
+# ratio at least 1.6
+#negative_words = ['waste', 'unwatchable', 'stinks', 'atrocious', 'yawn', 'ugh', 'abomination', 'stupidest', 'garbage', 'laughably', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting', 'poorly', 'disgrace', 'lame', 'insulting', 'lousy', 'disapointment', 'pointless', 'horrible', 'insult', 'laughable', 'terrible', 'moronic']
+# ratio at least 2.0
+negative_words = ['waste', 'unwatchable', 'stinks', 'atrocious', 'yawn', 'ugh', 'abomination', 'stupidest', 'garbage', 'laughably', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting']
 
 
 if os.path.isfile(embeddings_file):
