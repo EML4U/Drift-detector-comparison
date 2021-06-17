@@ -71,7 +71,7 @@ class AmazonReviewsReader:
                     continue
 
                 # Filter by score
-                if self.min_score!=-1 and self.max_score!=-1 and line_spilt[0] == "review/score":
+                if (self.min_score!=-1 or self.max_score!=-1) and line_spilt[0] == "review/score":
                     score = float(line_spilt[1].strip())
                     if(self.min_score != -1 and score < self.min_score):
                         self.exclude = True
@@ -79,7 +79,7 @@ class AmazonReviewsReader:
                         self.exclude = True
 
                 # Filter by year
-                elif self.min_year!=-1 and self.max_year!=-1 and line_spilt[0] == "review/time":
+                elif (self.min_year!=-1 or self.max_year!=-1) and line_spilt[0] == "review/time":
                     year = datetime.fromtimestamp(int(line_spilt[1])).year
                     if(self.min_year != -1 and year < self.min_year):
                         self.exclude = True
@@ -118,5 +118,5 @@ class AmazonReviewsReader:
                     
                     # Mode tagdoc
                     if(self.mode != "tagdoc"):
-                        raise ValueError("Unknown mode")
+                        raise ValueError("Unknown mode", self.mode)
                     yield gensim.models.doc2vec.TaggedDocument(tokens, [c])
