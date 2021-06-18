@@ -12,7 +12,7 @@ mode = "bert_768"
 #mode = "bow_50"
 #mode = "bow_768"
 #mode = "dummy"
-num_samples = 2000  # Will be taken from each score class, e.g. 2,000*5=10,000 samples
+num_samples = 2000  # Will be taken from each score class, e.g. 2,000*5=10,000 samples overall
 year_min = 2011  # Minimum year to extract data from
 year_max = 2012  # Maximum year to extract data from
 
@@ -117,7 +117,7 @@ else:
         pickle.dump(original_data, handle)
         pickle.dump(drift_data, handle)
         pickle.dump(train_data, handle)
-    print("Created", len(drift_data), "|", len(original_data), "samples")
+    print("Created", len(drift_data), "|", len(original_data), "|", len(train_data), "samples")
 
 # Injection
 # 0.5 means insertion of 1 words in 50 percent of texts
@@ -168,10 +168,24 @@ for num, perc in enumerate(target_percentages):
 # Save
 original_texts, original_keys = [list(t) for t in zip(*original_data)]
 original_embs = embed(original_texts)
-dump_data = {'orig': (original_embs, original_keys), 'drifted': (drifted_embeddings, drifted_keys)}
+train_texts, train_keys = [list(t) for t in zip(*train_data)]
+train_embs = embed(train_texts)
+dump_data = {'orig': (original_embs, original_keys), 'drifted': (drifted_embeddings, drifted_keys), 'train': (train_embs, train_keys)}
 with open(embeddings_file, 'wb') as handle:
     pickle.dump(dump_data, handle)
 
+# Stats
 time_end = time.time()
 runtime = time_end - time_begin;
-print("Runtime: %s seconds" % (runtime))
+print("Runtime: %s minutes" % (runtime/60))
+
+# Example
+if(True):
+    with open(embeddings_file, 'rb') as handle:
+        data = pickle.load(handle)
+    print(type(data), len(data))
+    for key, value in data.items() :
+        print (key, type(value), len(value))
+        for i in range(len(value)) :
+            print (value[i][0])
+            print()
