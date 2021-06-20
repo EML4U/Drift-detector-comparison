@@ -1,4 +1,4 @@
-# Raw version of notebook
+# Raw version of notebook for longtime runs in bash/screen
 
 import yaml
 import os.path
@@ -56,7 +56,8 @@ def default_fit(detector_id, detector, data_id, data, results, force_run):
     results_detector = {}
     
     time_begin = time.time()
-        
+    
+    print("fit")
     detector.fit(data)
     
     results_detector["time_fit"] = time.time() - time_begin
@@ -141,7 +142,8 @@ if(False):
 
 
 
-if(True): 
+if(False): 
+    # FCIT could be omitted
     from detectors.FCITDetector import FCITDriftDetector
     detector_id = "FCITDetector"
 
@@ -153,10 +155,55 @@ if(True):
 
         save_results(results_file, results)
 
-    # Canceled after 2:15 without any result
+    if(False): 
+        # Canceled after 2:15 without any result
+        data_id = "bow_768"
+        detector = FCITDriftDetector()
+        default_fit   (detector_id, detector, data_id, data[data_id]['orig'][0],    results, False)
+        default_detect(detector_id, detector, data_id, data[data_id]['drifted'][0], results, False)
+
+        save_results(results_file, results)
+
+
+
+if(False):
+    # Stays for long time in fit function without result
+    
+    from detectors.KernelTwoSampleDetector import KernelTwoSampleDriftDetector
+    detector_id = "KernelTwoSampleDetector"
+
+    if(False): 
+        data_id = "bow_50"
+        detector = KernelTwoSampleDriftDetector()
+        default_fit   (detector_id, detector, data_id, data[data_id]['orig'][0],    results, False)
+        default_detect(detector_id, detector, data_id, data[data_id]['drifted'][0], results, False)
+
+        save_results(results_file, results)
+
     data_id = "bow_768"
-    detector = FCITDriftDetector()
+    detector = KernelTwoSampleDriftDetector()
     default_fit   (detector_id, detector, data_id, data[data_id]['orig'][0],    results, False)
     default_detect(detector_id, detector, data_id, data[data_id]['drifted'][0], results, False)
-    
+
+    save_results(results_file, results)
+
+
+
+if(True):
+    from detectors.AlibiLSDD import AlibiLSDDDetector
+    detector_id = "AlibiLSDDDetector"
+
+    if(False):
+        data_id = "bow_50"
+        detector = AlibiLSDDDetector(backend='pytorch')
+        default_fit   (detector_id, detector, data_id, data[data_id]['orig'][0],    results, False)
+        default_detect(detector_id, detector, data_id, data[data_id]['drifted'][0], results, False)
+
+        save_results(results_file, results)
+
+    data_id = "bow_768"
+    detector = AlibiLSDDDetector()
+    default_fit   (detector_id, detector, data_id, data[data_id]['orig'][0],    results, False)
+    default_detect(detector_id, detector, data_id, data[data_id]['drifted'][0], results, False)
+
     save_results(results_file, results)
