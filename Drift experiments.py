@@ -189,7 +189,7 @@ if(False):
 
 
 
-if(True):
+if(False):
     from detectors.AlibiLSDD import AlibiLSDDDetector
     detector_id = "AlibiLSDDDetector"
 
@@ -202,7 +202,7 @@ if(True):
         save_results(results_file, results)
 
     data_id = "bow_768"
-    detector = AlibiLSDDDetector()
+    detector = AlibiLSDDDetector(backend='pytorch')
     default_fit   (detector_id, detector, data_id, data[data_id]['orig'][0],    results, False)
     default_detect(detector_id, detector, data_id, data[data_id]['drifted'][0], results, False)
 
