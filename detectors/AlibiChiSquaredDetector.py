@@ -8,16 +8,19 @@ import numpy as np
 class AlibiChiSquaredDetector(DriftDetector):
     
     # p-value used for significance of the Chi-Squared test.
+    # correction Correction type for multivariate data. Either ‘bonferroni’ or ‘fdr’ (False Discovery Rate).
     def __init__(self,
-                 p_val = 0.05):
+                 p_val = 0.05,
+                 correction = "bonferroni"):
         self.p_val = p_val
+        self.correction = correction
         super().__init__(classifier=None)
         
     def fit(self, data, targets) -> DriftDetector:
         return self.fit(data)
     
     def fit(self, data) -> DriftDetector:
-        self.cd = ChiSquareDrift(data, p_val=self.p_val)
+        self.cd = ChiSquareDrift(data, p_val=self.p_val, correction=self.correction)
         return self
     
     def predict(self, data) -> bool:
@@ -25,3 +28,4 @@ class AlibiChiSquaredDetector(DriftDetector):
     
     def predict_proba(self, data) -> float:
         return np.mean(self.cd.predict(data, drift_type='batch', return_p_val=True, return_distance=False).get('data').get('p_val'))
+
