@@ -82,7 +82,10 @@ def embedd(twitter_list, mode="tagdoc", max=-1):
 
 print("Creating tagged documents")
 mode = "tagdoc"
-tagdocs = embedd(data["biden"], mode, num_of_tweets/2) + embedd(data["trump"], mode, num_of_tweets/2)
+num = num_of_tweets
+if(num != -1):
+    num = num/2
+tagdocs = embedd(data["biden"], mode, num) + embedd(data["trump"], mode, num)
 
 
 
