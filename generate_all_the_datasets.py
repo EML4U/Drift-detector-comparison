@@ -9,9 +9,9 @@ modes = ['bert_768', 'bow_50', 'bow_768']
 print('Generating amazon data')
 for mode in modes:
     print('Now generating {}'.format(mode))
-    os.system('generator_amazon_movie_drift_data.py {mode}'.format(mode=mode))
-    os.system('generator_amazon_movie_same_dist.py {mode}'.format(mode=mode))
-    os.system('generator_amazon_movie_different_classes.py {mode}'.format(mode=mode))
+    os.system('python3 generator_amazon_movie_drift_data.py {mode}'.format(mode=mode))
+    os.system('python3 generator_amazon_movie_same_dist.py {mode}'.format(mode=mode))
+    os.system('python3 generator_amazon_movie_different_classes.py {mode}'.format(mode=mode))
     
     
 
@@ -19,10 +19,10 @@ for mode in modes:
 print('Generating twitter data')
 for mode in modes:
     print('Now generating {}'.format(mode))
-    os.system('generator_twitter_diff_classes.py {mode}'.format(mode=mode))
-    os.system('generator_twitter_diff_dists.py {mode}'.format(mode=mode))
-    os.system('generator_twitter_same_dist.py {mode}'.format(mode=mode))
-    os.system('generator_twitter_drift_data.py {mode}'.format(mode=mode))
+    os.system('python3 generator_twitter_diff_classes.py {mode}'.format(mode=mode))
+    os.system('python3 generator_twitter_diff_dists.py {mode}'.format(mode=mode))
+    os.system('python3 generator_twitter_same_dist.py {mode}'.format(mode=mode))
+    os.system('python3 generator_twitter_drift_data.py {mode}'.format(mode=mode))
 
 
 

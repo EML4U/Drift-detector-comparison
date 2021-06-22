@@ -47,7 +47,7 @@ print(datetime.fromtimestamp(time_begin))
 
 # Configure model to use by mode
 print("mode", mode)
-print("amazon_raw_file", amazon_raw_file)
+print("twitter_raw_file", twitter_raw_file)
 print("embeddings_file", embeddings_file)
 print("sample_file", sample_file)
 if(mode == "bert_768"):
