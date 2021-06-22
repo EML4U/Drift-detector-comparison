@@ -4,6 +4,9 @@
 # Directory containing https://snap.stanford.edu/data/movies.txt.gz
 AMAZON_MOVIE_REVIEWS_DIRECTORY: /mnt/eml4u-drift-data/amazon
 
+# Directory containing election_dataset_raw.pickle (311 MB)
+TWITTER_ELECTION_DIRECTORY: /mnt/eml4u-drift-data/twitter-election
+
 # Directory containing embeddings files
 EMBEDDINGS_DIRECTORY: /mnt/eml4u-drift-data/embeddings
 
@@ -15,3 +18,6 @@ GENSIM_MODEL_DIRECTORY: /mnt/eml4u-drift-data/gensim
 # https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon
 # http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar
 OPINION_WORDS_DIRECTORY: /mnt/eml4u-drift-data/opinion-words
+
+# Directory containing experiments data
+EXPERIMENTS_DIRECTORY: /mnt/eml4u-drift-data/experiments

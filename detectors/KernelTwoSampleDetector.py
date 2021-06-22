@@ -2,6 +2,17 @@ from DAWIDD.kernel_two_sample_test import kernel_two_sample_test
 from .DriftDetector import DriftDetector
 import numpy as np
 
+# Requires kernel_two_sample_test.py
+#
+# Repository has no setup file
+# https://github.com/FabianHinder/DAWIDD
+#
+# Just info: Origin is https://github.com/emanuele/kernel_two_sample_test/blob/master/kernel_two_sample_test.py
+#
+# Manual install:
+# mkdir DAWIDD ; cd DAWIDD
+# wget https://raw.githubusercontent.com/FabianHinder/DAWIDD/master/kernel_two_sample_test.py
+
 class KernelTwoSampleDriftDetector(DriftDetector):
     
     def __init__(self,
