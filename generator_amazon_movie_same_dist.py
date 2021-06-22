@@ -27,6 +27,7 @@ num_permutations = 20
 amazon_raw_file   = 'data/movies/embeddings/amazon_raw.pickle'
 gensim_model_50_file  = 'data/movies/amazonreviews_d.model'
 gensim_model_768_file = 'data/movies/amazonreviews_e.model'
+bert_model = 'data/movies/movie_9e'
 embeddings_file   = 'data/movies/embeddings/amazon_{mode}_same_dist.pickle'.format(mode=mode)
 
 
@@ -36,7 +37,7 @@ embeddings_file   = 'data/movies/embeddings/amazon_{mode}_same_dist.pickle'.form
 if(mode == "bert_768"):
     from embedding import BertHuggingface
     bert = BertHuggingface(5, batch_size=8)
-    bert.load('data/movies/movie_6e')
+    bert.load(bert_model)
     embed = bert.embed
 elif(mode == "bow_50"):
     print("gensim_model_50_file", gensim_model_50_file)

@@ -22,7 +22,7 @@ for mode in modes:
     os.system('generator_twitter_diff_classes.py {mode}'.format(mode=mode))
     os.system('generator_twitter_diff_dists.py {mode}'.format(mode=mode))
     os.system('generator_twitter_same_dist.py {mode}'.format(mode=mode))
-    #os.system('generator_twitter_drift_data.py {mode}'.format(mode=mode))
+    os.system('generator_twitter_drift_data.py {mode}'.format(mode=mode))
 
 
 

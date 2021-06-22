@@ -17,6 +17,8 @@ mode = sys.argv[1]
 
 embeddings_file_b   = 'data/twitter/biden_{mode}_embeddings.pickle'.format(mode=mode)
 embeddings_file_t   = 'data/twitter/trump_{mode}_embeddings.pickle'.format(mode=mode)
+gensim_model_50_file  = 'data/twitter/twitter_election_50.model' 
+gensim_model_768_file = 'data/twitter/twitter_election_768.model'
 
 
 with open('data/twitter/election_dataset_raw.pickle', 'rb') as handle:

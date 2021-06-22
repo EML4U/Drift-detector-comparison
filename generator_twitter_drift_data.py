@@ -23,9 +23,9 @@ mode = sys.argv[1]
 # embeddings_file    is to be generated here
 # sample_file        also generated here, ensures same data for each model
 twitter_raw_file   = 'data/twitter/election_dataset_raw.pickle'
-#gensim_model_50_file  = 'data/twitter/amazonreviews_d.model' TODO
-#gensim_model_768_file = 'data/twitter/amazonreviews_e.model' TODO
-embeddings_file       = 'data/twitter/twitter_drift_{}.pickle'.format(mode)
+gensim_model_50_file  = 'data/twitter/twitter_election_50.model' 
+gensim_model_768_file = 'data/twitter/twitter_election_768.model'
+embeddings_file       = 'data/twitter/twitter_{}_drift.pickle'.format(mode)
 
 #target_percentages = [0.005, 0.01, 0.02, 0.04, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2.0, 4.0, 10.0, 20.0, 50.0, 100.0]
 target_percentages = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1] # From every 40th word to every second word
@@ -73,9 +73,7 @@ elif(mode == "dummy"):
     embed = justpass
 else:
     raise ValueError("Unknown mode " + mode)
-    
-    ###########################################################################
-    
+        
 with open(twitter_raw_file, 'rb') as handle:
     twitter = pickle.load(handle)
     
@@ -86,54 +84,13 @@ biden = [x for x in biden if 'trump' not in x[1].lower()]
 trump = [x for x in trump if 'biden' not in x[1].lower()]
 
 
+random.shuffle(biden)
+random.shuffle(trump)
 
-    ###########################################################################
+original_data = biden[:num_samples] + trump[:num_samples]
+drift_data = biden[num_samples:2*num_samples] + trump[num_samples:2*num_samples]
+train_data = biden[2*num_samples:3*num_samples] + trump[2*num_samples:3*num_samples]
 
-
-
-# Load data
-print("Loading data")
-if os.path.isfile(sample_file):
-    with open(sample_file, 'rb') as handle:
-        original_data = pickle.load(handle)
-        drift_data = pickle.load(handle)
-        train_data = pickle.load(handle)
-    print("Loaded", len(drift_data), "|", len(original_data), "|", len(train_data), "samples")
-else:
-    docs_in_years = {}
-    with open(amazon_raw_file, 'rb') as handle:
-        texts, keys = pickle.load(handle)
-    for i in range(len(keys)):
-        keys[i][1] -= 1   # fix class names from 1..5 to 0..4 for easier 1-hot encoding
-        docs_in_years[keys[i][-2].year] = docs_in_years.get(keys[i][-2].year , 0) + 1
-    print("Docs in year overview:", docs_in_years)
-    print("Example keys", keys[0])
-
-    # Gather amazon reviews of year range only
-    # e.g. classes[2] = [..., ("text", ['7/15', 2, datetime.datetime(1997, 12, 19, 1, 0), 39862]), ...]
-    classes = [[] for x in range(5)]
-    for i in range(len(keys)):
-        if(keys[i][-2].year == year):
-            classes[keys[i][1]].append((texts[i],keys[i]))
-
-    # Randomize order and get samples
-    # Same amount for original data and drift data
-    for i in range(len(classes)):
-        random.shuffle(classes[i])
-    original_data = []
-    drift_data = []
-    train_data = []
-    for i in range(len(classes)):
-        original_data.extend(classes[i][:num_samples])
-        drift_data.extend(classes[i][num_samples:2*num_samples])
-        train_data.extend(classes[i][2*num_samples:3*num_samples])
-        
-    #sample_data = {'original_data': original_data, 'drift_data': drift_data}
-    with open(sample_file, 'wb') as handle:
-        pickle.dump(original_data, handle)
-        pickle.dump(drift_data, handle)
-        pickle.dump(train_data, handle)
-    print("Created", len(drift_data), "|", len(original_data), "|", len(train_data), "samples")
 
 # Injection
 # 0.5 means insertion of 1 words in 50 percent of texts

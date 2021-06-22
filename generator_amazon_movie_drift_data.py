@@ -26,6 +26,7 @@ mode = sys.argv[1]
 amazon_raw_file   = 'data/movies/embeddings/amazon_raw.pickle'
 gensim_model_50_file  = 'data/movies/amazonreviews_d.model'
 gensim_model_768_file = 'data/movies/amazonreviews_e.model'
+bert_model = 'data/movies/movie_9e'
 sample_file           = 'data/movies/embeddings/samples_{samplecount}_{year}.pickle'.format(samplecount=num_samples*5, year=year)
 embeddings_file       = 'data/movies/embeddings/amazon_drift_{}.pickle'.format(mode)
 
@@ -55,7 +56,7 @@ print("sample_file", sample_file)
 if(mode == "bert_768"):
     from embedding import BertHuggingface
     bert = BertHuggingface(5, batch_size=8)
-    bert.load('data/movies/movie_6e')
+    bert.load(bert_model)
     embed = bert.embed
 elif(mode == "bow_50"):
     print("gensim_model_50_file", gensim_model_50_file)
