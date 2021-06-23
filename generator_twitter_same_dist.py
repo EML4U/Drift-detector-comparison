@@ -27,6 +27,10 @@ start_file_t = 'data/twitter/trump_{}_embeddings.pickle'.format(mode)
 embeddings_file   = 'data/twitter/twitter_{mode}_same_dist.pickle'.format(mode=mode)
 
 
+if os.path.isfile(embeddings_file):  # Do not overwrite
+    print("Embeddings file already exists, exiting.", embeddings_file)
+    exit()
+
 with open(start_file_b, 'rb') as handle:
     biden = pickle.load(handle)
 with open(start_file_t, 'rb') as handle:
@@ -48,7 +52,7 @@ data = []
 for perm in range(num_permutations):
     entry = []
     for i in range(len(classes)):
-        entry.extend(classes[i][:num_samples])
+        entry.extend(classes[i][num_samples*perm:num_samples*(perm+1)])
     data.append(entry)
     
     
@@ -56,7 +60,7 @@ embeddings = []
 e_keys = []
 for d in data:
     emb_texts, emb_keys = [list(t) for t in zip(*d)]
-    embeddings.append(embed(emb_texts))
+    embeddings.append(emb_texts)
     e_keys.append(emb_keys)
 
 

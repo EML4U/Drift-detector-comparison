@@ -49,7 +49,6 @@ print(datetime.fromtimestamp(time_begin))
 print("mode", mode)
 print("twitter_raw_file", twitter_raw_file)
 print("embeddings_file", embeddings_file)
-print("sample_file", sample_file)
 if(mode == "bert_768"):
     from embedding import BertHuggingface
     bert = BertHuggingface(8, model_name='bert-base-multilingual-cased', batch_size=8)
@@ -131,7 +130,7 @@ if(False):  # Injection test
 
 # Inject percentages
 drifted_embeddings = []  
-drifted_texts, drifted_keys = [list(t) for t in zip(*drift_data)]
+drifted_keys, drifted_texts = [list(t) for t in zip(*drift_data)]
 drifted_embeddings.append(embed(drifted_texts))
 for num, perc in enumerate(target_percentages):
     print("Incecting", num, "|", perc)
@@ -139,9 +138,9 @@ for num, perc in enumerate(target_percentages):
     drifted_embeddings.append(embed(drifted_texts))
 
 # Save
-original_texts, original_keys = [list(t) for t in zip(*original_data)]
+original_keys, original_texts = [list(t) for t in zip(*original_data)]
 original_embs = embed(original_texts)
-train_texts, train_keys = [list(t) for t in zip(*train_data)]
+train_keys, train_texts = [list(t) for t in zip(*train_data)]
 train_embs = embed(train_texts)
 dump_data = {'orig': (original_embs, original_keys), 'drifted': (drifted_embeddings, drifted_keys), 'train': (train_embs, train_keys)}
 with open(embeddings_file, 'wb') as handle:

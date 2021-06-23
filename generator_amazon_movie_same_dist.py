@@ -59,12 +59,15 @@ with open(amazon_raw_file, 'rb') as handle:
 for i in range(len(keys)):
     keys[i][1] -= 1   # fix class names from 1..5 to 0..4 for easier 1-hot encoding
 
+if os.path.isfile(embeddings_file):  # Do not overwrite
+    print("Embeddings file already exists, exiting.", embeddings_file)
+    exit()
     
     
     
 # gather amazon reviews of the fourth year only
 classes = [[] for x in range(5)]
-data = [x for x in list(zip(texts, keys)) if keys[0][-2] + timedelta(days=365*4) < x[1][-2] < keys[0][-2] + timedelta(days=365*(4+1))]
+data = [x for x in list(zip(texts, keys)) if x[1][-2].year == 2011]
 for point in data:
     classes[point[1][1]].append(point)
     
@@ -83,7 +86,7 @@ data = []
 for perm in range(num_permutations):
     entry = []
     for i in range(len(classes)):
-        entry.extend(classes[i][:num_samples])
+        entry.extend(classes[i][num_samples*perm:num_samples*(perm+1)])
     data.append(entry)
     
     

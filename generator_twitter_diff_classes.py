@@ -20,6 +20,9 @@ embeddings_file_t   = 'data/twitter/trump_{mode}_embeddings.pickle'.format(mode=
 gensim_model_50_file  = 'data/twitter/twitter_election_50.model' 
 gensim_model_768_file = 'data/twitter/twitter_election_768.model'
 
+if os.path.isfile(embeddings_file_b) and os.path.isfile(embeddings_file_t):  # Do not overwrite
+    print("Embeddings file already exists, exiting.", embeddings_file_t)
+    exit()
 
 with open('data/twitter/election_dataset_raw.pickle', 'rb') as handle:
     twitter = pickle.load(handle)

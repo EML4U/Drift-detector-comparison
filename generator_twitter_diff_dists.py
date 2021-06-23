@@ -29,20 +29,20 @@ with open(start_file_t, 'rb') as handle:
 
     
 
-d100 = min([x[0] for x in biden]) + timedelta(hours=100)
-d124 = min([x[0] for x in biden]) + timedelta(hours=124)
-d192 = min([x[0] for x in biden]) + timedelta(hours=192)
-d480 = min([x[0] for x in biden]) + timedelta(hours=480)
+d100 = min([x[1] for x in biden]) + timedelta(hours=100)
+d124 = min([x[1] for x in biden]) + timedelta(hours=124)
+d192 = min([x[1] for x in biden]) + timedelta(hours=192)
+d480 = min([x[1] for x in biden]) + timedelta(hours=480)
     
-b_100 = [b for b in biden if b[0] > d100 and b[0] < d100 + timedelta(hours=24)]
-b_124 = [b for b in biden if b[0] > d124 and b[0] < d124 + timedelta(hours=24)]
-b_192 = [b for b in biden if b[0] > d192 and b[0] < d192 + timedelta(hours=24)]
-b_480 = [b for b in biden if b[0] > d480 and b[0] < d480 + timedelta(hours=24)]
+b_100 = [b for b in biden if b[1] > d100 and b[1] < d100 + timedelta(hours=24)]
+b_124 = [b for b in biden if b[1] > d124 and b[1] < d124 + timedelta(hours=24)]
+b_192 = [b for b in biden if b[1] > d192 and b[1] < d192 + timedelta(hours=24)]
+b_480 = [b for b in biden if b[1] > d480 and b[1] < d480 + timedelta(hours=24)]
     
-t_100 = [t for t in trump if t[0] > d100 and t[0] < d100 + timedelta(hours=24)]
-t_124 = [t for t in trump if t[0] > d124 and t[0] < d124 + timedelta(hours=24)]
-t_192 = [t for t in trump if t[0] > d192 and t[0] < d192 + timedelta(hours=24)]
-t_480 = [t for t in trump if t[0] > d480 and t[0] < d480 + timedelta(hours=24)]
+t_100 = [t for t in trump if t[1] > d100 and t[1] < d100 + timedelta(hours=24)]
+t_124 = [t for t in trump if t[1] > d124 and t[1] < d124 + timedelta(hours=24)]
+t_192 = [t for t in trump if t[1] > d192 and t[1] < d192 + timedelta(hours=24)]
+t_480 = [t for t in trump if t[1] > d480 and t[1] < d480 + timedelta(hours=24)]
     
     
 b_100 = b_100[:min(len(b_100),len(t_100))]
