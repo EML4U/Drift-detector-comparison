@@ -18,7 +18,7 @@ if len(sys.argv) < 2 or sys.argv[1] not in modes:
 mode = sys.argv[1]
 
 num_samples = 500
-num_permutations = 20
+num_permutations = 20 + 1
 
 
 # embeddings_file    is to be generated here
