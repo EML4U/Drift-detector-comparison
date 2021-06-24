@@ -61,23 +61,23 @@ data = {}
 
 chunk_size= 500
 
-b_100_chunks = [[list(x) for x in zip(*b_100[i:i + chunk_size])][1] for i in range(0, len(b_100), chunk_size)][:-1]
-t_100_chunks = [[list(x) for x in zip(*t_100[i:i + chunk_size])][1] for i in range(0, len(t_100), chunk_size)][:-1]
+b_100_chunks = [[list(x) for x in zip(*b_100[i:i + chunk_size])][0] for i in range(0, len(b_100), chunk_size)][:-1]
+t_100_chunks = [[list(x) for x in zip(*t_100[i:i + chunk_size])][0] for i in range(0, len(t_100), chunk_size)][:-1]
 
 data['100'] = (b_100_chunks, t_100_chunks)
 
-b_124_chunks = [[list(x) for x in zip(*b_124[i:i + chunk_size])][1] for i in range(0, len(b_124), chunk_size)][:-1]
-t_124_chunks = [[list(x) for x in zip(*t_124[i:i + chunk_size])][1] for i in range(0, len(t_124), chunk_size)][:-1]
+b_124_chunks = [[list(x) for x in zip(*b_124[i:i + chunk_size])][0] for i in range(0, len(b_124), chunk_size)][:-1]
+t_124_chunks = [[list(x) for x in zip(*t_124[i:i + chunk_size])][0] for i in range(0, len(t_124), chunk_size)][:-1]
 
 data['124'] = (b_124_chunks, t_124_chunks)
 
-b_192_chunks = [[list(x) for x in zip(*b_192[i:i + chunk_size])][1] for i in range(0, len(b_192), chunk_size)][:-1]
-t_192_chunks = [[list(x) for x in zip(*t_192[i:i + chunk_size])][1] for i in range(0, len(t_192), chunk_size)][:-1]
+b_192_chunks = [[list(x) for x in zip(*b_192[i:i + chunk_size])][0] for i in range(0, len(b_192), chunk_size)][:-1]
+t_192_chunks = [[list(x) for x in zip(*t_192[i:i + chunk_size])][0] for i in range(0, len(t_192), chunk_size)][:-1]
 
 data['192'] = (b_192_chunks, t_192_chunks)
 
-b_480_chunks = [[list(x) for x in zip(*b_480[i:i + chunk_size])][1] for i in range(0, len(b_480), chunk_size)][:-1]
-t_480_chunks = [[list(x) for x in zip(*t_480[i:i + chunk_size])][1] for i in range(0, len(t_480), chunk_size)][:-1]
+b_480_chunks = [[list(x) for x in zip(*b_480[i:i + chunk_size])][0] for i in range(0, len(b_480), chunk_size)][:-1]
+t_480_chunks = [[list(x) for x in zip(*t_480[i:i + chunk_size])][0] for i in range(0, len(t_480), chunk_size)][:-1]
 
 data['480'] = (b_480_chunks, t_480_chunks)
 
