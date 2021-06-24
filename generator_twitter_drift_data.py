@@ -23,8 +23,8 @@ mode = sys.argv[1]
 # embeddings_file    is to be generated here
 # sample_file        also generated here, ensures same data for each model
 twitter_raw_file   = 'data/twitter/election_dataset_raw.pickle'
-gensim_model_50_file  = 'data/twitter/twitter_election_50.model' 
-gensim_model_768_file = 'data/twitter/twitter_election_768.model'
+gensim_model_50_file  = 'data/twitter/twitter_election_50/twitter_election_50.model'
+gensim_model_768_file = 'data/twitter/twitter_election_768/twitter_election_768.model'
 embeddings_file       = 'data/twitter/twitter_{}_drift.pickle'.format(mode)
 
 #target_percentages = [0.005, 0.01, 0.02, 0.04, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2.0, 4.0, 10.0, 20.0, 50.0, 100.0]

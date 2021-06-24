@@ -24,8 +24,8 @@ mode = sys.argv[1]
 # embeddings_file    is to be generated here
 # sample_file        also generated here, ensures same data for each model
 amazon_raw_file   = 'data/movies/embeddings/amazon_raw.pickle'
-gensim_model_50_file  = 'data/movies/amazonreviews_d.model'
-gensim_model_768_file = 'data/movies/amazonreviews_e.model'
+gensim_model_50_file  = 'data/movies/amazonreviews_d/amazonreviews_d.model'
+gensim_model_768_file = 'data/movies/amazonreviews_e/amazonreviews_e.model'
 bert_model = 'data/movies/movie_9e'
 sample_file           = 'data/movies/embeddings/samples_{samplecount}_{year}.pickle'.format(samplecount=num_samples*5, year=year)
 embeddings_file       = 'data/movies/embeddings/amazon_drift_{}.pickle'.format(mode)
