@@ -1,5 +1,5 @@
 # from .DriftDetector import DriftDetector
-from sklearn.base import BaseEstimator
+from .DriftDetector import DriftDetector
 from sklearn.model_selection import train_test_split
 from scipy.special import rel_entr
 from scipy.special import kl_div
@@ -8,18 +8,22 @@ from detectors.unc_detector.uncertaintyM import uncertainty_ent
 from detectors.unc_detector.a_RF import get_prob_matrix
 import matplotlib.pyplot as plt
 from scipy.stats import norm
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
 
 def conficance_score_svm(model, data):
     y = model.decision_function(data)
     w_norm = np.linalg.norm(model.coef_)
     dist = y / w_norm
-    dist = dist.max(axis=1) # average over distances from all the classes [not sure]
+    dist = dist.max(axis=1) # Max of distances from all the classes [not sure]
     return dist
 
-class CDBDDetector(BaseEstimator):
+class CDBDDetector(DriftDetector):
     
-    def __init__(self, classifier):
-        self.classifier = classifier
+    def __init__(self):
+        super().__init__(classifier=None)
+        self.classifier = SVC(kernel='linear', random_state=42) # SVM model
+
 
     def get_distribution(self, data, laplace=1, log=False):
         data_digit = np.digitize(data, self.bins)
@@ -50,16 +54,18 @@ class CDBDDetector(BaseEstimator):
             print("p_value ", p_value) 
         return p_value
 
-    def fit(self, data, targets):
-        return self.fit(data)
+    def fit(self, data, targets, n_batch=50, train_split=0.5, batch_size=0):
+        # train a model
+        data = np.array(data)
+        targets = targets.astype('int')
+        x_train, data, y_train, y_test = train_test_split(data, targets, test_size=1-train_split, shuffle=False)
+        self.classifier.fit(x_train, y_train)
 
-    def fit(self, data, batch_size=0, n_batch=50):
         if batch_size==0:
-            self.batch_size = int(len(data)/ n_batch + 1)
+            self.batch_size = int(len(data)/ (n_batch + 1))
         else:
             pass
                 
-        data = np.array(data)
         # data_score = self.classifier.predict_proba(data) # calculate the output prob dist for all test data
         # get the indicator scores by computing total uncertainty
 
@@ -79,7 +85,7 @@ class CDBDDetector(BaseEstimator):
         # n, bins, patches = plt.hist(data_score, bins=np.logspace(data_score.min(), data_score.max(), 9, base=2)) # log bins
         # self.bins = bins
 
-        plt.savefig("unc_dist_test_data.png") # plot to see distribution of the total uncertainty(used as indicator score)
+        # plt.savefig("unc_dist_test_data.png") # plot to see distribution of the total uncertainty(used as indicator score)
         plt.close()
         # print(n)
         # print(nn)
@@ -89,18 +95,12 @@ class CDBDDetector(BaseEstimator):
         ref_batch = data_score[0:self.batch_size]
         # print("reference batch ", ref_batch.shape)
         self.ref_dist = self.get_distribution(ref_batch, log=False)
-        
-        # old before get_distribution function
-        # ref_digit = np.digitize(ref_batch, bins[1:-1])
-        # c = np.bincount(ref_digit, minlength=9)
-        # self.ref_dist = c / c.sum()
-
 
         # calculate the threshold
         kl_list = []
-        for i in range(1,n_batch):
-            if (i+1)*self.batch_size > len(data_score):
-                break
+        for i in range(1,n_batch+1):
+            # if (i+1)*self.batch_size > len(data_score):
+            #     break
             batch_score = data_score[i*self.batch_size:(i+1)*self.batch_size] # take a batch
             # print("batch_score ", batch_score.shape)
             batch_dist = self.get_distribution(batch_score, log=False)
@@ -116,6 +116,9 @@ class CDBDDetector(BaseEstimator):
         self.threshold = kl_array.mean() + kl_array.std()
         return self
 
+    # def fit(self, data):
+    #     pass
+
     def predict(self, data) -> bool:
         kl = self.predict_proba(data)
         if kl > self.threshold:
@@ -125,33 +128,10 @@ class CDBDDetector(BaseEstimator):
     
     def predict_proba(self, data) -> float:
         data = np.array(data)
-
-        # score for forest
-        # porb_matrix = get_prob_matrix(self.classifier, data, self.classifier.n_estimators, 1) # 1 is laplace
-        # data_score, epistemic_uncertainty, aleatoric_uncertainty = uncertainty_ent(porb_matrix)
-
         # data score for svm
         data_score = conficance_score_svm(self.classifier, data)
-
-        # [Method 1] KL divergence for the entire test data
-        # print("test batch shape", data_score.shape)
         data_dist = self.get_distribution(data_score, log=False)
         kl_all = rel_entr(self.ref_dist, data_dist).sum()
-        # kl_all = kl_div(self.ref_dist, data_dist).sum()
-        # kl_all = kl_div(data_dist, self.ref_dist).sum()
         p_value = self.divergence_to_pvalue(kl_all, log=False)
-
-        # # [Method 2] averaged KL for test data seperated into batches that are the same size as the ref_batch
-        # n_batch = int(data.shape[0] / self.batch_size)
-        # kl_list = []
-        # for i in range(n_batch):
-        #     batch_score = data_score[i*self.batch_size:(i+1)*self.batch_size]
-        #     batch_dist = self.get_distribution(batch_score)
-        #     kl = kl_div(self.ref_dist, batch_dist).sum() # sum over values for each class
-        #     p_value = self.divergence_to_pvalue(kl)
-        #     kl_list.append(p_value)
-        # kl_array = np.array(kl_list)
-        # # kl_array = kl_array[kl_array < 1E308]
-        # p_value = kl_array.mean()
 
         return p_value
