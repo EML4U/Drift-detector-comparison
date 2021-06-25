@@ -7,44 +7,58 @@ import numpy as np
 from detectors.unc_detector.uncertaintyM import uncertainty_ent
 from detectors.unc_detector.a_RF import get_prob_matrix
 import matplotlib.pyplot as plt
-
-from math import log2
-def kl_divergence(p, q):
-    return sum(p[i] * log2(p[i]/q[i]) for i in range(len(p)))
+from scipy.stats import norm
 
 def conficance_score_svm(model, data):
     y = model.decision_function(data)
     w_norm = np.linalg.norm(model.coef_)
     dist = y / w_norm
-    dist = dist.mean(axis=1) # average over distances from all the classes [not sure]
+    dist = dist.max(axis=1) # average over distances from all the classes [not sure]
     return dist
 
-class CDBD(BaseEstimator):
+class CDBDDetector(BaseEstimator):
     
     def __init__(self, classifier):
         self.classifier = classifier
 
+    def get_distribution(self, data, laplace=1, log=False):
+        data_digit = np.digitize(data, self.bins)
+        c = np.bincount(data_digit, minlength=len(self.bins)+1) # +1 is to fix the problem with not counting last bin for sum batches
+        if log:
+            print("------------------------------------get_distribution log")
+            print("c\n", c)
+        c = c + laplace
+        if log:
+            print("c lapcace\n", c)
+            print("dist\n", c / c.sum(), " dist sum ", (c / c.sum()).sum())
+            print()
+        return c / c.sum()
+    
+    def divergence_to_pvalue(self, divergence, log=False):
+        # # emperical p-value
+        # larger_kl = np.where( self.n_batch_kl < divergence)
+        # p_value = len(larger_kl[0]) / len(self.n_batch_kl)
+
+        # define the normal dist with mean ans sd from kl_array
+        p_value = norm(loc=self.n_batch_kl_mean,scale=self.n_batch_kl_std).sf(abs(divergence))
+
+        if log:
+            print("------------------------------------divergence_to_pvalue log")
+            print("divergence\n", divergence)
+            print("kl batch array\n", self.n_batch_kl)
+            # print(f"len larger {len(larger_kl[0])} len kl batch {len(self.n_batch_kl)}")
+            print("p_value ", p_value) 
+        return p_value
+
     def fit(self, data, targets):
         return self.fit(data)
 
-    def get_distribution(self, data, laplace=1):
-        data_digit = np.digitize(data, self.bins)
-        c = np.bincount(data_digit, minlength=len(self.bins)+1) # +1 is to fix the problem with not counting last bin for sum batches
-        c = c + laplace
-        return c / c.sum()
-    
-    def divergence_to_pvalue(self, divergence):
-        larger_kl = np.where( self.n_batch_kl < divergence)
-        p_value = len(larger_kl[0]) / len(self.n_batch_kl) 
-        return p_value
-    
     def fit(self, data, batch_size=0, n_batch=50):
         if batch_size==0:
             self.batch_size = int(len(data)/ n_batch + 1)
         else:
             pass
-
-        
+                
         data = np.array(data)
         # data_score = self.classifier.predict_proba(data) # calculate the output prob dist for all test data
         # get the indicator scores by computing total uncertainty
@@ -73,7 +87,8 @@ class CDBD(BaseEstimator):
 
         # calculating prob distribution for the reference batch
         ref_batch = data_score[0:self.batch_size]
-        self.ref_dist = self.get_distribution(ref_batch)
+        # print("reference batch ", ref_batch.shape)
+        self.ref_dist = self.get_distribution(ref_batch, log=False)
         
         # old before get_distribution function
         # ref_digit = np.digitize(ref_batch, bins[1:-1])
@@ -84,17 +99,20 @@ class CDBD(BaseEstimator):
         # calculate the threshold
         kl_list = []
         for i in range(1,n_batch):
-            if (i)*self.batch_size > len(data_score):
+            if (i+1)*self.batch_size > len(data_score):
                 break
             batch_score = data_score[i*self.batch_size:(i+1)*self.batch_size] # take a batch
             # print("batch_score ", batch_score.shape)
-            batch_dist = self.get_distribution(batch_score)
-            # kl = rel_entr(self.ref_dist, batch_dist).sum() # calculate KL divergence. sum over values for each class
-            kl = kl_div(self.ref_dist, batch_dist).sum()
+            batch_dist = self.get_distribution(batch_score, log=False)
+            kl = rel_entr(self.ref_dist, batch_dist).sum() # calculate KL divergence. sum over values for each class
+            # kl = kl_div(self.ref_dist, batch_dist).sum()
+            # kl = kl_div(batch_dist, self.ref_dist).sum()
             kl_list.append(kl)
         kl_array = np.array(kl_list)
         # kl_array = kl_array[kl_array < 1E308] # removing inf values of KL
         self.n_batch_kl = kl_array
+        self.n_batch_kl_mean = kl_array.mean()
+        self.n_batch_kl_std  = kl_array.std()
         self.threshold = kl_array.mean() + kl_array.std()
         return self
 
@@ -116,9 +134,12 @@ class CDBD(BaseEstimator):
         data_score = conficance_score_svm(self.classifier, data)
 
         # [Method 1] KL divergence for the entire test data
-        data_dist = self.get_distribution(data_score)
-        # kl_all = rel_entr(self.ref_dist, data_dist).sum()
-        kl_all = kl_div(self.ref_dist, data_dist).sum()
+        # print("test batch shape", data_score.shape)
+        data_dist = self.get_distribution(data_score, log=False)
+        kl_all = rel_entr(self.ref_dist, data_dist).sum()
+        # kl_all = kl_div(self.ref_dist, data_dist).sum()
+        # kl_all = kl_div(data_dist, self.ref_dist).sum()
+        p_value = self.divergence_to_pvalue(kl_all, log=False)
 
         # # [Method 2] averaged KL for test data seperated into batches that are the same size as the ref_batch
         # n_batch = int(data.shape[0] / self.batch_size)
@@ -126,11 +147,11 @@ class CDBD(BaseEstimator):
         # for i in range(n_batch):
         #     batch_score = data_score[i*self.batch_size:(i+1)*self.batch_size]
         #     batch_dist = self.get_distribution(batch_score)
-        #     kl = rel_entr(self.ref_dist, batch_dist).sum() # sum over values for each class
-        #     kl_list.append(kl)
+        #     kl = kl_div(self.ref_dist, batch_dist).sum() # sum over values for each class
+        #     p_value = self.divergence_to_pvalue(kl)
+        #     kl_list.append(p_value)
         # kl_array = np.array(kl_list)
-        # kl_array = kl_array[kl_array < 1E308]
-        # kl_avg = kl_array.mean()
+        # # kl_array = kl_array[kl_array < 1E308]
+        # p_value = kl_array.mean()
 
-        p_value = self.divergence_to_pvalue(kl_all)
         return p_value

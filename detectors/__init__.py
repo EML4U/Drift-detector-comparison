@@ -5,4 +5,4 @@ from .AlibiKSDetector import AlibiKSDetector
 from .AlibiMMDDetector import AlibiMMDDetector
 from .AlibiChiSquaredDetector import AlibiChiSquaredDetector
 from .FCITDetector import FCITDriftDetector
-from .CDBDDetector import CDBD
+from .CDBDDetector import CDBDDetector
