@@ -18,7 +18,7 @@ class AlibiLSDDDetector(DriftDetector):
     
     # backend: tensorflow or pytorch
     def __init__(self,
-                 backend='tensorflow'):
+                 backend='pytorch'):
         self.backend = backend
         super().__init__(classifier=None)
         
