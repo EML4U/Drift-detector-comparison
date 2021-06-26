@@ -23,10 +23,7 @@ class KernelTwoSampleDriftDetector(DriftDetector):
         self.boundary = boundary
         self.iterations = iterations
         
-    def fit(self, data, targets) -> DriftDetector:
-        return self.fit(data)
-    
-    def fit(self, data) -> DriftDetector:
+    def fit(self, data, targets=None) -> DriftDetector:
         self.original_data = np.array(data)
         return self
     

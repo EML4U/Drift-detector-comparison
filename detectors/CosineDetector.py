@@ -16,10 +16,7 @@ class CosineSimilarityDriftDetector(DriftDetector):
         self.boundary = boundary
         self.original_mean = None
         
-    def fit(self, data, targets) -> DriftDetector:
-        return self.fit(data)
-    
-    def fit(self, data) -> DriftDetector:
+    def fit(self, data, targets=None) -> DriftDetector:
         self.original_mean = normalized(sum(data))
         return self
     

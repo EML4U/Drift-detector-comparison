@@ -17,10 +17,7 @@ class AlibiKSDetector(DriftDetector):
         self.correction = correction
         super().__init__(classifier=None)
         
-    def fit(self, data, targets) -> DriftDetector:
-        return self.fit(data)
-    
-    def fit(self, data) -> DriftDetector:
+    def fit(self, data, targets=None) -> DriftDetector:
         self.cd = KSDrift(data, p_val=self.p_val, correction=self.correction)
         return self
     

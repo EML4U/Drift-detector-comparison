@@ -6,10 +6,7 @@ class DriftDetector(BaseEstimator):
                  classifier):
         self.classifier = classifier
         
-    def fit(self, data, targets):
-        return self
-    
-    def fit(self, data):
+    def fit(self, data, targets=None):
         return self
     
     def predict(self, data) -> bool:

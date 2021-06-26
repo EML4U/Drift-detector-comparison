@@ -22,10 +22,7 @@ class AlibiLSDDDetector(DriftDetector):
         self.backend = backend
         super().__init__(classifier=None)
         
-    def fit(self, data, targets) -> DriftDetector:
-        return self.fit(data)
-    
-    def fit(self, data) -> DriftDetector:
+    def fit(self, data, targets=None) -> DriftDetector:
         self.cd = LSDDDrift(data, backend=self.backend)
         return self
     

@@ -16,10 +16,7 @@ class AlibiMMDDetector(DriftDetector):
         self.backend = backend
         super().__init__(classifier=None)
         
-    def fit(self, data, targets) -> DriftDetector:
-        return self.fit(data)
-    
-    def fit(self, data) -> DriftDetector:
+    def fit(self, data, targets=None) -> DriftDetector:
         self.cd = MMDDrift(data, p_val=self.p_val, backend=self.backend)
         return self
     

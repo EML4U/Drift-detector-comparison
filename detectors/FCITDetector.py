@@ -13,10 +13,7 @@ class FCITDriftDetector(DriftDetector):
         self.original_data = None
         self.num_perm = num_perm
         
-    def fit(self, data, targets) -> DriftDetector:
-        return self.fit(data)
-    
-    def fit(self, data) -> DriftDetector:
+    def fit(self, data, targets=None) -> DriftDetector:
         self.original_data = np.array(data)
         return self
     

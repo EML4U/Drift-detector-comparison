@@ -26,10 +26,7 @@ class AlibiChiSquaredDetector(DriftDetector):
         else:
             return data
         
-    def fit(self, data, targets) -> DriftDetector:
-        return self.fit(data)
-    
-    def fit(self, data) -> DriftDetector:
+    def fit(self, data, targets=None) -> DriftDetector:
         self.cd = ChiSquareDrift(self.create_categories(data), p_val=self.p_val, correction=self.correction)
         return self
     
