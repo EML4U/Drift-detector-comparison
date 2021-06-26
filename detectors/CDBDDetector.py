@@ -15,7 +15,10 @@ def conficance_score_svm(model, data):
     y = model.decision_function(data)
     w_norm = np.linalg.norm(model.coef_)
     dist = y / w_norm
-    dist = dist.max(axis=1) # Max of distances from all the classes [not sure]
+    try:
+        dist = dist.max(axis=1) # Max of distances from all the classes [not sure]
+    except:
+        pass
     return dist
 
 class CDBDDetector(DriftDetector):
@@ -58,7 +61,7 @@ class CDBDDetector(DriftDetector):
         # train a model
         data = np.array(data)
         targets = targets.astype('int')
-        x_train, data, y_train, y_test = train_test_split(data, targets, test_size=1-train_split, shuffle=False)
+        x_train, data, y_train, y_test = train_test_split(data, targets, test_size=1-train_split)#, shuffle=False)
         self.classifier.fit(x_train, y_train)
 
         if batch_size==0:
