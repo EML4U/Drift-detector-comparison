@@ -9,23 +9,38 @@ from detectors.unc_detector.a_RF import get_prob_matrix
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+import math
+from scipy.stats import t
 
 def conficance_score_svm(model, data):
     y = model.decision_function(data)
     w_norm = np.linalg.norm(model.coef_)
     dist = y / w_norm
     try:
-        dist = dist.max(axis=1) # Max of distances from all the classes [not sure]
+        dist = dist.mean(axis=1) # Max of distances from all the classes [not sure]
     except:
         pass
     return dist
 
 class CDBDDetector(DriftDetector):
     
-    def __init__(self):
+    def __init__(self, model_type="forest"):
         super().__init__(classifier=None)
-        self.classifier = SVC(kernel='linear', random_state=42) # SVM model
+
+        self.model_type = model_type
+        if model_type == "forest":
+            self.classifier = RandomForestClassifier(bootstrap=True,
+                criterion='entropy',
+                max_depth=10,
+                n_estimators=30,
+                random_state=42,
+                verbose=0,
+                warm_start=False)
+        else:
+            self.classifier = SVC(kernel='linear', random_state=42) # SVM model
+
 
 
     def get_distribution(self, data, laplace=1, log=False):
@@ -49,6 +64,10 @@ class CDBDDetector(DriftDetector):
         # define the normal dist with mean ans sd from kl_array
         p_value = norm(loc=self.n_batch_kl_mean,scale=self.n_batch_kl_std).sf(abs(divergence))
 
+        # t_value = (divergence - self.n_batch_kl_mean) / (self.n_batch_kl_std / math.sqrt(len(self.n_batch_kl)-1))
+        # p_value = t.sf(t_value)
+
+
         if log:
             print("------------------------------------divergence_to_pvalue log")
             print("divergence\n", divergence)
@@ -57,11 +76,11 @@ class CDBDDetector(DriftDetector):
             print("p_value ", p_value) 
         return p_value
 
-    def fit(self, data, targets, n_batch=50, train_split=0.5, batch_size=0):
+    def fit(self, data, targets, n_batch=20, train_split=0.5, batch_size=0):
         # train a model
         data = np.array(data)
         targets = targets.astype('int')
-        x_train, data, y_train, y_test = train_test_split(data, targets, test_size=1-train_split)#, shuffle=False)
+        x_train, data, y_train, y_test = train_test_split(data, targets, test_size=1-train_split, shuffle=True)#, shuffle=False)
         self.classifier.fit(x_train, y_train)
 
         if batch_size==0:
@@ -71,13 +90,14 @@ class CDBDDetector(DriftDetector):
                 
         # data_score = self.classifier.predict_proba(data) # calculate the output prob dist for all test data
         # get the indicator scores by computing total uncertainty
-
-        # data score for Forest
-        # porb_matrix = get_prob_matrix(self.classifier, data, self.classifier.n_estimators, 1) # 1 is laplace
-        # data_score, _, _ = uncertainty_ent(porb_matrix)
-
-        # data score for svm
-        data_score = conficance_score_svm(self.classifier, data)
+        
+        if self.model_type == "forest":
+            # data score for Forest
+            porb_matrix = get_prob_matrix(self.classifier, data, self.classifier.n_estimators, 0) # 1 is laplace
+            data_score, _, _ = uncertainty_ent(porb_matrix)
+        else:
+            # data score for svm
+            data_score = conficance_score_svm(self.classifier, data)
 
         # get the bins
         n, bins, patches = plt.hist(data_score, bins=9) # equal distance bins
@@ -115,7 +135,7 @@ class CDBDDetector(DriftDetector):
         # kl_array = kl_array[kl_array < 1E308] # removing inf values of KL
         self.n_batch_kl = kl_array
         self.n_batch_kl_mean = kl_array.mean()
-        self.n_batch_kl_std  = kl_array.std()
+        self.n_batch_kl_std  = kl_array.std(ddof=1)
         self.threshold = kl_array.mean() + kl_array.std()
         return self
 
@@ -131,8 +151,15 @@ class CDBDDetector(DriftDetector):
     
     def predict_proba(self, data) -> float:
         data = np.array(data)
-        # data score for svm
-        data_score = conficance_score_svm(self.classifier, data)
+        
+        if self.model_type == "forest":
+            # data score for Forest
+            porb_matrix = get_prob_matrix(self.classifier, data, self.classifier.n_estimators, 0) # 1 is laplace
+            data_score, _, _ = uncertainty_ent(porb_matrix)
+        else:
+            # data score for svm
+            data_score = conficance_score_svm(self.classifier, data)
+
         data_dist = self.get_distribution(data_score, log=False)
         kl_all = rel_entr(self.ref_dist, data_dist).sum()
         p_value = self.divergence_to_pvalue(kl_all, log=False)
