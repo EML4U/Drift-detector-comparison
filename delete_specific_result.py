@@ -13,8 +13,13 @@ with open(filename, 'rb') as handle:
     results = pickle.load(handle)
     
     
-for mode in results:
-    results[mode].pop(detector_to_delete)
+if 'twitter_diff_dist' in filename:
+    for res in results:
+        for mode in res:
+            res[mode].pop(detector_to_delete)
+else:
+    for mode in results:
+        results[mode].pop(detector_to_delete)
 
 
 with open(filename, 'wb') as handle:
