@@ -12,8 +12,7 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import math
-from scipy.stats import t
-
+from scipy import stats
 def conficance_score_svm(model, data):
     y = model.decision_function(data)
     w_norm = np.linalg.norm(model.coef_)
@@ -30,16 +29,6 @@ class CDBDDetector(DriftDetector):
         super().__init__(classifier=None)
 
         self.model_type = model_type
-        if model_type == "forest":
-            self.classifier = RandomForestClassifier(bootstrap=True,
-                criterion='entropy',
-                max_depth=10,
-                n_estimators=30,
-                random_state=42,
-                verbose=0,
-                warm_start=False)
-        else:
-            self.classifier = SVC(kernel='linear', random_state=42) # SVM model
 
 
 
@@ -77,6 +66,17 @@ class CDBDDetector(DriftDetector):
         return p_value
 
     def fit(self, data, targets, n_batch=20, train_split=0.5, batch_size=0):
+        if self.model_type == "forest":
+            self.classifier = RandomForestClassifier(bootstrap=True,
+                criterion='entropy',
+                max_depth=10,
+                n_estimators=30,
+                random_state=42,
+                verbose=0,
+                warm_start=False)
+        else:
+            self.classifier = SVC(kernel='linear', random_state=42) # SVM model
+
         # train a model
         data = np.array(data)
         targets = targets.astype('int')
@@ -116,7 +116,8 @@ class CDBDDetector(DriftDetector):
 
         # calculating prob distribution for the reference batch
         ref_batch = data_score[0:self.batch_size]
-        # print("reference batch ", ref_batch.shape)
+        # print(">>>>>>> [CDBD] reference batch ", ref_batch.shape)
+        # exit()
         self.ref_dist = self.get_distribution(ref_batch, log=False)
 
         # calculate the threshold
@@ -164,4 +165,25 @@ class CDBDDetector(DriftDetector):
         kl_all = rel_entr(self.ref_dist, data_dist).sum()
         p_value = self.divergence_to_pvalue(kl_all, log=False)
 
+        # [Method 2] averaged KL for test data seperated into batches that are the same size as the ref_batch
+        # kl_list = []
+        # for i in range(len(self.n_batch_kl)):
+        #     batch_score = data_score[i*self.batch_size:(i+1)*self.batch_size]
+        #     batch_dist = self.get_distribution(batch_score)
+        #     kl = rel_entr(self.ref_dist, batch_dist).sum() # sum over values for each class
+        #     kl_list.append(kl)
+        # kl_array = np.array(kl_list)
+        # p_array = []
+        # for kl in kl_array:
+        #     p_value = self.divergence_to_pvalue(kl, log=False)
+        #     p_array.append(p_value)
+        #     # p_array.append(kl)
+        # p_array = np.array(p_array)
+        # p_value = p_array.mean()
+        # res = stats.ttest_rel(self.n_batch_kl, kl_array, alternative='greater')
+        # res = stats.wilcoxon(self.n_batch_kl, kl_array, alternative='greater')
+        # p_value = res.pvalue
+
+
         return p_value
+        # return kl_all
