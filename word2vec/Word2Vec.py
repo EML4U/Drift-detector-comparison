@@ -1,6 +1,3 @@
-# Models are available at
-#  https://hobbitdata.informatik.uni-leipzig.de/EML4U/2021-05-17-Amazon-Doc2Vec/
-#
 # Minimal example:
 #  word2vec = Word2Vec("amazonreviews.model")
 #  word2vec.prepare()

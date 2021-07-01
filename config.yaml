@@ -11,7 +11,6 @@ TWITTER_ELECTION_DIRECTORY: /mnt/project-drift-data/twitter-election
 EMBEDDINGS_DIRECTORY: /mnt/project-drift-data/embeddings
 
 # Directory containing files gensim model files:
-# https://hobbitdata.informatik.uni-leipzig.de/project/2021-05-17-Amazon-Doc2Vec/
 GENSIM_MODEL_DIRECTORY: /mnt/project-drift-data/gensim
 
 # Directory containing positive and negative words
