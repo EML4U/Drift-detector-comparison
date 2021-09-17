@@ -5,25 +5,18 @@ import gensim
 import time
 
 # Config 50
-doc2vec_vector_size = 50  # Dimensionality of the feature vectors
+doc2vec_vector_size = [50, 768]  # Dimensionality of the feature vectors
 doc2vec_min_count   = 2   # Ignores all words with total frequency lower than this
 doc2vec_epochs      = 40  # Number of iterations (epochs) over the corpus. Defaults to 10 for Doc2Vec
 doc2vec_dm          = 1   # Training algorithm, distributed memory (PV-DM) or distributed bag of words (PV-DBOW)
 num_of_tweets       = -1  # -1 to process all (for development)
 
-# Config 768
-if(False):
-    doc2vec_vector_size = 768
 
 # Set data paths
-config            = yaml.safe_load(open("../config.yaml", "r"))
-twitter_file      = os.path.join(config["TWITTER_ELECTION_DIRECTORY"], "election_dataset_raw.pickle")
-gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "twitter_election_" + str(doc2vec_vector_size) + ".model")
+#config            = yaml.safe_load(open("../config.yaml", "r"))
+twitter_file      = "../data/twitter/election_dataset_raw.pickle"
+gensim_model_file = "../data/twitter/twitter_election_model/twitter_election_{dim}.model"
 
-# Development (to estimate runtime)
-if(False):
-    num_of_tweets = 5000
-    gensim_model_file = os.path.join(config["GENSIM_MODEL_DIRECTORY"], "twitter_election_" + str(doc2vec_vector_size) + "_" + str(num_of_tweets) + ".model")
     
     
     
@@ -87,38 +80,38 @@ if(num != -1):
     num = num/2
 tagdocs = embedd(data["biden"], mode, num) + embedd(data["trump"], mode, num)
 
+for vec_size in doc2vec_vector_size:
 
-
-print("Building vocabulary")
-model = gensim.models.doc2vec.Doc2Vec(vector_size=doc2vec_vector_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=doc2vec_dm)
-model.build_vocab(tagdocs)
-
-
-
-print("Training model")
-time_begin = time.time()
-model.train(tagdocs, total_examples=model.corpus_count, epochs=model.epochs)
-time_end = time.time()
+    print("Building vocabulary")
+    model = gensim.models.doc2vec.Doc2Vec(vector_size=vec_size, min_count=doc2vec_min_count, epochs=doc2vec_epochs, dm=doc2vec_dm)
+    model.build_vocab(tagdocs)
 
 
 
-print("Saving model file", gensim_model_file)
-model.save(gensim_model_file)
+    print("Training model")
+    time_begin = time.time()
+    model.train(tagdocs, total_examples=model.corpus_count, epochs=model.epochs)
+    time_end = time.time()
 
 
 
-# Info
-print(model)
-runtime = time_end - time_begin;
-print("Runtime: %s minutes" % (runtime/60))
-print("Gensim version:", gensim.__version__)
+    print("Saving model file", gensim_model_file.format(dim=vec_size))
+    model.save(gensim_model_file.format(dim=vec_size))
 
 
 
-# Estimate runtime
-if(num_of_tweets != -1):
-    mean_runtime = runtime / num_of_tweets
-    print(num_of_tweets, doc2vec_vector_size, doc2vec_epochs, mean_runtime, all_tweets * mean_runtime / 60)
+    # Info
+    print(model)
+    runtime = time_end - time_begin;
+    print("Runtime: %s minutes" % (runtime/60))
+    print("Gensim version:", gensim.__version__)
+
+
+
+    # Estimate runtime
+    if(num_of_tweets != -1):
+        mean_runtime = runtime / num_of_tweets
+        print(num_of_tweets, vec_size, doc2vec_epochs, mean_runtime, all_tweets * mean_runtime / 60)
 
 # tweets  dim  it  sec/doc  estimation (min)
 # 5000     50  40  0.0040   80.6454

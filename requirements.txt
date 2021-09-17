@@ -1,0 +1,15 @@
+datetime
+numpy==1.19.2
+matplotlib==3.3.2
+pprintpp==0.4.0
+alibi_detect==0.7.0
+sklearn
+scipy==1.4.1
+fcit==1.2.0
+langdetect==1.0.8
+git+git://github.com/UBI-AGML-NLP/Embeddings@1.0#egg=agml-embedding
+
+
+
+
+#git+git://github.com/FabianHinder/DAWIDD@master#egg=DAWIDD

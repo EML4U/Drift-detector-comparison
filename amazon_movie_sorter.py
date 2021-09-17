@@ -11,9 +11,9 @@ import yaml
 from word2vec.amazon_reviews_reader import AmazonReviewsReader
 import time
 
-config          = yaml.safe_load(open("config.yaml", 'r'))
-amazon_gz_file  = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "movies.txt.gz")
-amazon_raw_file = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "amazon_raw.pickle")
+#config          = yaml.safe_load(open("config.yaml", 'r'))
+amazon_gz_file    = "data/movies/movies.txt.gz"
+amazon_raw_file = "data/movies/embeddings/amazon_raw.pickle"
 max_docs        = -1  # -1 for all
 
 text_list = []

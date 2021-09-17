@@ -31,7 +31,7 @@ def one_epoch():
 for e in range(1, 10):
     print('Results after {epoch} epochs: '.format(epoch=e), end='')
     one_epoch()
-    bert.save('movie_{epoch}e'.format(epoch=e))
+    bert.save('data/movies/movie_{epoch}e'.format(epoch=e))
     
     
 # Results after 1 epochs: (0.6176892647813851, 0.622, 0.6167358103186324, None)
