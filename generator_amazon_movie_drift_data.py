@@ -33,6 +33,8 @@ embeddings_file       = 'data/movies/embeddings/amazon_drift_{}.pickle'.format(m
 #target_percentages = [0.005, 0.01, 0.02, 0.04, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2.0, 4.0, 10.0, 20.0, 50.0, 100.0]
 target_percentages = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1] # From every 40th word to every second word
 
+
+# These word were generated using the word2vec/opinion_words_amazon_combine.py and [...]_extract.py scripts
 negative_words = ['waste', 'unwatchable', 'stinks']
 if(True): # ratio at least 2.0
     negative_words.extend(['atrocious', 'yawn', 'ugh', 'abomination', 'stupidest', 'garbage', 'laughably', 'worst', 'rubbish', 'defective', 'incoherent', 'ripoff', 'unconvincing', 'awful', 'dud', 'wasted', 'abysmal', 'travesty', 'wasting'])

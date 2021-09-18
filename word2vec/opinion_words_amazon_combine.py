@@ -6,18 +6,17 @@ import pickle
 import csv
 
     
-config            = yaml.safe_load(open("../config.yaml", 'r'))
-pickle_score_one  = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words-score-one.pickle")
-pickle_score_five = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words-score-five.pickle")
-pickle_results = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words.pickle")
-csv_results    = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words.csv")
+pickle_score_one  = "../data/movies/negative-words-score-one.pickle"
+pickle_score_five = "../data/movies/negative-words-score-five.pickle"
+pickle_results = "../data/movies/negative-words.pickle"
+csv_results    = "../data/movies/negative-words.csv"
 
 if(False):
     # Use small test dataset
-    pickle_score_one  = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words-score-one.pickle")
-    pickle_score_five = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words-score-five.pickle")
-    pickle_results    = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words.pickle")
-    csv_results       = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words.csv")
+    pickle_score_one  = "../data/movies/small-negative-words-score-one.pickle"
+    pickle_score_five = "../data/movies/small-negative-words-score-five.pickle"
+    pickle_results    = "../data/movies/small-negative-words.pickle"
+    csv_results       = "../data/movies/small-negative-words.csv"
 
 
 # Read

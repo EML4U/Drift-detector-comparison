@@ -5,8 +5,7 @@ import os.path
 from amazon_reviews_reader import AmazonReviewsReader
 from datetime import datetime
 
-config         = yaml.safe_load(open("../config.yaml", 'r'))
-amazon_gz_file = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "movies.txt.gz")
+amazon_gz_file = "../data/movies/movies.txt.gz"
 max_docs       = -1
 
 years_scores = dict()

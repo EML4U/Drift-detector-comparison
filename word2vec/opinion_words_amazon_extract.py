@@ -10,11 +10,10 @@ from amazon_reviews_reader import AmazonReviewsReader
 import pickle
 
 
-config              = yaml.safe_load(open("../config.yaml", 'r'))
-negative_words_file = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words.txt")
-amazon_gz_file      = os.path.join(config["AMAZON_MOVIE_REVIEWS_DIRECTORY"], "movies.txt.gz")
-pickle_score_one    = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words-score-one.pickle")
-pickle_score_five   = os.path.join(config["OPINION_WORDS_DIRECTORY"], "negative-words-score-five.pickle")
+negative_words_file = "../data/movies/negative-words.txt"
+amazon_gz_file      = "../data/movies/movies.txt.gz"
+pickle_score_one    = "../data/movies/negative-words-score-one.pickle"
+pickle_score_five   = "../data/movies/negative-words-score-five.pickle"
 
 
 # Deprecated: Adds words to list
@@ -119,8 +118,8 @@ max_year            = -1  # -1 for all ; 1999 is small corpus
 
 if(False):
     # Create small test dataset
-    pickle_score_one      = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words-score-one.pickle")
-    pickle_score_five     = os.path.join(config["OPINION_WORDS_DIRECTORY"], "small-negative-words-score-five.pickle")
+    pickle_score_one      = "../data/movies/small-negative-words-score-one.pickle"
+    pickle_score_five     = "../data/movies/small-negative-words-score-five.pickle"
     max_docs              = 100
     max_year              = 1999
 
