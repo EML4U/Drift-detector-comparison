@@ -1,6 +1,6 @@
 # EML4U Drift Detector Comparison
 
-This is the code repository for the "Drift Detection in Text Data withDocument Embeddings" by Feldhans, Wilke, Heindorf, Shaker, Hammer, Ngonga Ngomo, and Hüllermeier. 
+This is the code repository for the "Drift Detection in Text Data with Document Embeddings" by Feldhans, Wilke, Heindorf, Shaker, Hammer, Ngonga Ngomo, and Hüllermeier. 
 
 ## Acknowledgments
 This  work  has  been  supported  by  the  German  FederalMinistry of Education and Research (BMBF) within the project EML4U under the grant no 01IS19080 A and B.
