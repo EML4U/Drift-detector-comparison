@@ -1,10 +1,9 @@
 # EML4U Drift Detector Comparison
 
-This is the code repository for the "Drift Detection in Text Data with Document Embeddings" by Feldhans, Wilke, Heindorf, Shaker, Hammer, Ngonga Ngomo, and Hüllermeier. 
-
-## Acknowledgments
-This  work  has  been  supported  by  the  German  FederalMinistry of Education and Research (BMBF) within the project EML4U under the grant no 01IS19080 A and B.
-
+This is the code repository of the article
+**Drift Detection in Text Data with Document Embeddings** (2021) by Feldhans, Wilke, Heindorf, Shaker, Hammer, Ngonga Ngomo, and Hüllermeier.
+([DOI](https://doi.org/10.1007/978-3-030-91608-4_11),
+[PDF preprint](https://papers.dice-research.org/2021/IDEAL2021_DriftDetectionEmbeddings/Drift-Detection-in-Text-Data-with-Document-Embeddings-public.pdf))
 
 ## Installation notes
 
@@ -35,10 +34,6 @@ pip3 install nlp
 conda info --envs
 conda activate EML4U
 ```
-
-## Dataset: Amazon movie reviews
-
-![](figures/amazon-overview/amazon-overview.svg)
 
 
 ## How to run these experiments
@@ -123,3 +118,7 @@ Download the Amazon and Twitter base datasets
     
 - Run evaluation/tweet_count_gen.ipynb
     - this will create Figure 1 of the paper
+
+## Acknowledgments
+
+This  work  has  been  supported  by  the  German  FederalMinistry of Education and Research (BMBF) within the project [EML4U](https://eml4u.github.io/) under the grant no 01IS19080 A and B.
