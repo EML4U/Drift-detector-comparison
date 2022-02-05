@@ -3,7 +3,7 @@
 This is the code repository of the article
 **Drift Detection in Text Data with Document Embeddings** (2021) by Feldhans, Wilke, Heindorf, Shaker, Hammer, Ngonga Ngomo, and Hüllermeier.
 ([DOI](https://doi.org/10.1007/978-3-030-91608-4_11),
-[PDF preprint](https://papers.dice-research.org/2021/IDEAL2021_DriftDetectionEmbeddings/Drift-Detection-in-Text-Data-with-Document-Embeddings-public.pdf))
+[PDF preprint](https://papers.dice-research.org/2021/IDEAL2021_DriftDetectionEmbeddings/Drift-Detection-in-Text-Data-with-Document-Embeddings-public.pdf), [BibTeX](CITATION.bib))
 
 ## Installation notes
 
