@@ -28,6 +28,11 @@ pip3 install alibi-detect==0.7.0
 pip3 install nlp
 ```
 
+### Dynamic Adapting Window Independence Drift Detection (DAWIDD)
+
+Clone this [git repository](https://github.com/FabianHinder/DAWIDD) and add it to your
+`PTHONPATH` environment variable or to `sys.path` before importing `detectors`.
+
 ### Activate an environment (example)
 
 ```python
